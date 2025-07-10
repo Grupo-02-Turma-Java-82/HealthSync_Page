@@ -1,5 +1,6 @@
 import { PersonalLayout } from "@/components/PersonalLayout";
 import { UserLayout } from "@/components/UserLayout";
+import { NewExercise } from "@/pages/NewExercise";
 import { Exercises } from "@/pages/Exercises";
 import { PersonalDashboard } from "@/pages/PersonalDashboard";
 import { Students } from "@/pages/Students";
@@ -23,6 +24,10 @@ export function DashboardRoutes() {
 
       <Route path="/personal-exercicios" element={<PersonalLayout />}>
         <Route index element={<Exercises />} />
+      </Route>
+
+      <Route path="/personal-novo-exercicio" element={<PersonalLayout />}>
+        <Route index element={<NewExercise />} />
       </Route>
     </Routes>
   );

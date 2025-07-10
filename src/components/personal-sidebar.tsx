@@ -39,7 +39,7 @@ const items = [
   },
   {
     title: "Montar Exercício",
-    url: "/newExercise",
+    url: "/personal-novo-exercicio",
     icon: DumbbellIcon,
   },
   {
