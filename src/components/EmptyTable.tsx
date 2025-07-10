@@ -8,7 +8,7 @@ type Props = {
 
 export function EmptyTable({ icon, iconSize, title }: Props) {
   return (
-    <div className="flex flex-col justify-center items-center gap-4 text-gray-300 py-8">
+    <div className="flex flex-col justify-center items-center gap-4 text-primary py-8">
       <DynamicIcon name={icon} size={iconSize} />
       <h2 className="text-2xl font-bold text-center">{title}</h2>
     </div>

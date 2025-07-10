@@ -184,48 +184,5 @@
         "equipamento_necessario": "Halteres e banco"
       }
     ]
-  },
-  {
-    "id": 1,
-    "nomeCompleto": "Beatriz Lima Costa",
-    "email": "beatriz.costa@example.com.br",
-    "senha": "senha_forte_Bia_123#",
-    "dataNascimento": "1995-03-15",
-    "genero": "Feminino",
-    "alturaCm": 168,
-    "pesoKg": 64.5,
-    "imc": 22.86,
-    "objetivoPrincipal": "Perda de peso",
-    "dataCadastro": "2025-01-20T10:30:00Z",
-    "exercicios": [
-      {
-        "id": 101,
-        "nome": "Corrida na Esteira",
-        "dataCriacao": "2025-01-15",
-        "categoria": {
-          "id": 1,
-          "nome": "Cardio",
-          "descricao": "Exercícios focados em aumentar a frequência cardíaca para melhorar a saúde do coração e a queima de calorias."
-        },
-        "url_video_demonstrativo": "https://www.youtube.com/watch?v=example1",
-        "descricao_detalhada": "Corrida de intensidade moderada para queima de calorias e melhora da capacidade cardiovascular.",
-        "nivel_dificuldade": "INICIANTE",
-        "equipamento_necessario": "Esteira"
-      },
-      {
-        "id": 102,
-        "nome": "Agachamento com Peso Corporal",
-        "dataCriacao": "2025-01-15",
-        "categoria": {
-          "id": 2,
-          "nome": "Pernas",
-          "descricao": "Focado no fortalecimento dos músculos dos membros inferiores, como quadríceps e glúteos."
-        },
-        "url_video_demonstrativo": "https://www.youtube.com/watch?v=example2",
-        "descricao_detalhada": "Exercício fundamental para fortalecimento de pernas e glúteos sem a necessidade de equipamento.",
-        "nivel_dificuldade": "INICIANTE",
-        "equipamento_necessario": "Nenhum"
-      }
-    ]
   }
 ]

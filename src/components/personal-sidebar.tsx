@@ -29,12 +29,12 @@ const items = [
   },
   {
     title: "Meus Alunos",
-  url: "/personal-alunos",
+    url: "/personal-alunos",
     icon: UsersIcon,
   },
   {
     title: "Biblioteca de Exercicios",
-    url: "/exercises",
+    url: "/personal-exercicios",
     icon: BookOpen,
   },
   {

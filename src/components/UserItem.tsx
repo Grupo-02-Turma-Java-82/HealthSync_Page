@@ -1,7 +1,7 @@
 import type { User } from "@/models/Users";
-import { UserBadge } from "./UserBadge";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Badge } from "./ui/badge";
 
 type Props = {
   users: User;
@@ -17,7 +17,7 @@ export function UserItem({ users }: Props) {
 
   const diffHours =
     (new Date().getTime() - createdAt.getTime()) / (50000 * 60 * 120);
-  const status = diffHours > 4 ? "inactive" : "active";
+  const status = diffHours > 4 ? "default" : "secondary";
 
   return (
     <div className="flex justify-between items-center">
@@ -30,7 +30,9 @@ export function UserItem({ users }: Props) {
         </p>
       </div>
 
-      <UserBadge variant={status} />
+      <Badge variant={status}>
+        {status == "default" ? "Ativo" : "Inativo"}
+      </Badge>
     </div>
   );
 }
