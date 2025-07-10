@@ -10,6 +10,7 @@ export type User = {
   genero: string;
   alturaCm: number;
   pesoKg: number;
+  imc?: number;
   objetivoPrincipal: string;
   dataCadastro: Date;
 };

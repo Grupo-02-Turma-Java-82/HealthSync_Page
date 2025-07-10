@@ -29,7 +29,7 @@ const items = [
   },
   {
     title: "Meus Alunos",
-    url: "/users",
+  url: "/personal-alunos",
     icon: UsersIcon,
   },
   {
