@@ -1,7 +1,8 @@
+import { Plans } from '../components/Plans';
+
 export function Home() {
   return (
-    <div>
-      Home
-    </div>
+    <Plans>
+    </Plans>
   )
 }
