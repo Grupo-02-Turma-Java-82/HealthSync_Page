@@ -1,70 +1,57 @@
+import type { Treino } from "@/types/Workout";
 
-type Exercicio = {
-  id: number;
-  nome: string;
-  series: number;
-  reps: string;
-  carga: string;
-  descanso: string;
-};
+interface TreinoCardProps {
+  treino: Treino;
+}
 
-const exerciciosMock: Exercicio[] = [
-  { id: 1, nome: "Supino Reto", series: 4, reps: "8–12", carga: "70kg", descanso: "90s" },
-  { id: 2, nome: "Supino Inclinado", series: 3, reps: "10–15", carga: "60kg", descanso: "75s" },
-  { id: 3, nome: "Crucifixo", series: 3, reps: "12–15", carga: "25kg", descanso: "60s" },
-  { id: 4, nome: "Tríceps Testa", series: 4, reps: "10–12", carga: "30kg", descanso: "60s" },
-  { id: 5, nome: "Tríceps Corda", series: 3, reps: "12–15", carga: "40kg", descanso: "45s" },
-];
+export default function TreinoCard({ treino }: TreinoCardProps) {
+  const iniciarTreino = () => {
+    console.log("Iniciando treino:", treino.nome);
+    // Aqui você pode redirecionar para /treino/execucao ou abrir modal etc
+  };
 
-export default function TreinoAtualCard() {
-  const exercicios = exerciciosMock;
+  const verDetalhes = () => {
+    console.log("Ver detalhes do treino:", treino.nome);
+    // Pode usar router.push("/treinos/detalhes") se for implementar rota
+  };
 
   return (
-    <section className="bg-[#2d0e00] text-white rounded-xl p-6 space-y-6">
-      <div className="flex justify-between items-start">
+    <section className="bg-[#2d0e00] text-white p-6 rounded-xl shadow-md space-y-4">
+      <header className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold">Treino de Peito e Tríceps</h2>
-          <p className="text-sm text-orange-400">
-            {exercicios.length} exercícios • 45–60 min • Intermediário • 320–450 kcal
+          <h2 className="text-xl font-bold">{treino.nome}</h2>
+          <p className="text-sm text-gray-300">
+            {treino.exercicios.length} exercícios • {treino.duracaoMin} min •{" "}
+            {treino.nivel.toLowerCase()} • {treino.calorias} kcal
           </p>
         </div>
-        <p className="text-sm text-zinc-400">Hoje</p>
-      </div>
+      </header>
 
-      <ul className="space-y-4">
-        {exercicios.map((ex) => (
-          <li key={ex.id} className="flex justify-between items-center">
-            <div className="flex gap-4">
-              <span className="bg-orange-700 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-                {ex.id}
-              </span>
-              <div>
-                <h3 className="font-medium">{ex.nome}</h3>
-                <p className="text-sm text-zinc-300">
-                  {ex.series} séries • {ex.reps} reps • {ex.carga} • Descanso: {ex.descanso}
-                </p>
-              </div>
-            </div>
-            <button>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 text-zinc-400 hover:text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+      <ul className="space-y-2">
+        {treino.exercicios.map((ex, index) => (
+          <li key={index} className="border-l-4 border-orange-500 pl-4">
+            <p className="font-medium text-orange-400">{ex.nome}</p>
+            <p className="text-sm text-gray-300">
+              {ex.series} séries • {ex.repeticoes} reps • {ex.carga} • Descanso:{" "}
+              {ex.descanso}
+            </p>
           </li>
         ))}
       </ul>
 
-      <div className="flex justify-between items-center pt-4">
-        <button className="bg-orange-500 text-black px-5 py-2 rounded-lg font-semibold hover:bg-orange-400">
-          ▶ Iniciar Treino
+      <div className="flex justify-between items-center pt-4 border-t border-orange-900">
+        <button
+          onClick={iniciarTreino}
+          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded transition-all"
+        >
+          Iniciar Treino
         </button>
-        <button className="text-sm text-orange-400 hover:underline">Ver Detalhes</button>
+        <button
+          onClick={verDetalhes}
+          className="text-sm text-gray-300 hover:text-white underline"
+        >
+          Ver Detalhes
+        </button>
       </div>
     </section>
   );
