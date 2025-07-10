@@ -1,6 +1,7 @@
 import type { Categories } from "./Categories";
 
 export type Exercises = {
+  duracao: string;
   id: number;
   nome: string;
   categoria: Categories;

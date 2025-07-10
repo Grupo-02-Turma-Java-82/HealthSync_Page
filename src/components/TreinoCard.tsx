@@ -1,57 +1,53 @@
-import type { Treino } from "@/types/Workout";
+import type { Exercises } from "@/models/Exercises";
+import { Play } from "lucide-react";
+import ExercisesCard from "./ExercisesCard";
 
 interface TreinoCardProps {
-  treino: Treino;
+  nome: string;
+  nivel: string;
+  tempoEstimado: string;
+  caloriasEstimadas: string;
+  exercicios: Exercises[];
 }
 
-export default function TreinoCard({ treino }: TreinoCardProps) {
-  const iniciarTreino = () => {
-    console.log("Iniciando treino:", treino.nome);
-    // Aqui você pode redirecionar para /treino/execucao ou abrir modal etc
-  };
-
-  const verDetalhes = () => {
-    console.log("Ver detalhes do treino:", treino.nome);
-    // Pode usar router.push("/treinos/detalhes") se for implementar rota
-  };
-
+export default function TreinoCard({
+  nome,
+  nivel,
+  tempoEstimado,
+  caloriasEstimadas,
+  exercicios,
+}: TreinoCardProps) {
   return (
-    <section className="bg-[#2d0e00] text-white p-6 rounded-xl shadow-md space-y-4">
-      <header className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-bold">{treino.nome}</h2>
-          <p className="text-sm text-gray-300">
-            {treino.exercicios.length} exercícios • {treino.duracaoMin} min •{" "}
-            {treino.nivel.toLowerCase()} • {treino.calorias} kcal
-          </p>
+    <section className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border">
+      {/* Header */}
+      <div className="grid auto-rows-min items-start gap-1.5 px-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <div className="flex-1">
+            <h2 className="font-semibold text-xl">{nome}</h2>
+            <div className="text-muted-foreground mt-2 flex flex-wrap gap-2 text-sm">
+              <span>{exercicios.length} exercícios</span>
+              <span>•</span>
+              <span>{tempoEstimado}</span>
+              <span>•</span>
+              <span>{nivel}</span>
+              <span>•</span>
+              <span>{caloriasEstimadas}</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-2">
+            <span className="text-xs px-2 py-1 rounded bg-secondary text-secondary-foreground">
+              Hoje
+            </span>
+          </div>
         </div>
-      </header>
+      </div>
 
-      <ul className="space-y-2">
-        {treino.exercicios.map((ex, index) => (
-          <li key={index} className="border-l-4 border-orange-500 pl-4">
-            <p className="font-medium text-orange-400">{ex.nome}</p>
-            <p className="text-sm text-gray-300">
-              {ex.series} séries • {ex.repeticoes} reps • {ex.carga} • Descanso:{" "}
-              {ex.descanso}
-            </p>
-          </li>
+      {/* Conteúdo: exercícios */}
+      <div className="px-6 space-y-3 mb-6">
+        {exercicios.map((ex, i) => (
+          <ExercisesCard key={ex.id} index={i} treino={ex} />
         ))}
-      </ul>
-
-      <div className="flex justify-between items-center pt-4 border-t border-orange-900">
-        <button
-          onClick={iniciarTreino}
-          className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded transition-all"
-        >
-          Iniciar Treino
-        </button>
-        <button
-          onClick={verDetalhes}
-          className="text-sm text-gray-300 hover:text-white underline"
-        >
-          Ver Detalhes
-        </button>
       </div>
     </section>
   );
