@@ -1,8 +1,9 @@
-import { Plans } from '../components/Plans';
+import { Feedbacks } from "@/components/Feedbacks";
 
 export function Home() {
   return (
-    <Plans>
-    </Plans>
-  )
+    <div>
+      <Feedbacks />
+    </div>
+  );
 }
