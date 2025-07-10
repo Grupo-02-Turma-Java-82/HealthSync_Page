@@ -4,7 +4,7 @@ import { NavbarDashboard } from "./NavbarDashboard";
 export function UserLayout() {
   return (
     <main className="w-full md:w-auto">
-      <NavbarDashboard />
+      {/* <NavbarDashboard /> */}
       <Outlet />
     </main>
   );

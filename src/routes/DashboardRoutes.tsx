@@ -3,7 +3,7 @@ import { UserLayout } from "@/components/UserLayout";
 import { Exercises } from "@/pages/Exercises";
 import { PersonalDashboard } from "@/pages/PersonalDashboard";
 import { Students } from "@/pages/Students";
-import { UserDashboard } from "@/pages/UserDashboard";
+import UserDashboard from "@/pages/UserDashboard";
 import { Routes, Route } from "react-router";
 
 export function DashboardRoutes() {
