@@ -7,7 +7,7 @@ export function Navbar() {
         {/* Logo e Título */}
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-fast">
           <img
-            src="/assets/healthsync-logo-DCzBVSHU.png"
+            src="https://i.imgur.com/2Mjvyxn_d.jpeg?maxwidth=520&shape=thumb&fidelity=high"
             alt="HealthSync"
             className="w-8 h-8"
           />
