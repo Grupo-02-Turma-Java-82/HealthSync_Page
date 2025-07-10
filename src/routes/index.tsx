@@ -16,7 +16,7 @@ export function Routes() {
 
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <DashboardRoutes />
     </BrowserRouter>
   );
 }

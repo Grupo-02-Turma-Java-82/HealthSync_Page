@@ -1,5 +1,13 @@
+import { ThemeProvider } from "./components/theme-provider";
+import { UsersProvider } from "./contexts/UsersContext";
 import { Routes } from "./routes";
 
 export function App() {
-  return <Routes />;
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <UsersProvider>
+        <Routes />
+      </UsersProvider>
+    </ThemeProvider>
+  );
 }
