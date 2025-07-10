@@ -1,5 +1,4 @@
 import type { Exercises } from "@/models/Exercises";
-import { Play } from "lucide-react";
 import ExercisesCard from "./ExercisesCard";
 
 interface TreinoCardProps {
