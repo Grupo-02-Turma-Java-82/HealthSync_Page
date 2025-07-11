@@ -51,7 +51,7 @@ export default function TreinoCard({
 
       {/* Conteúdo: exercícios */}
       <div className="px-6 space-y-3 mb-6">
-        {displayedExercises.map((ex, i) => (
+        {displayedExercises.map((ex) => (
           <ExercisesCard key={ex.id} treino={ex} />
         ))}
       </div>

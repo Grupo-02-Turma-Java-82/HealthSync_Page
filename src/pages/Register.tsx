@@ -1,17 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { NavLink } from "react-router-dom"; // Use react-router-dom
-import z from "zod";
 import { FormRegisterStudent } from "@/components/FormRegisterStudent"; // Importar o novo componente
-
-const signInSchema = z.object({
-  email: z.string().email({ message: "Por favor, insira um email válido." }),
-  senha: z
-    .string()
-    .min(8, { message: "A senha deve ter no mínimo 8 caracteres." }),
-});
-
-type SignInSchema = z.infer<typeof signInSchema>;
 
 export function Register() {
   return (

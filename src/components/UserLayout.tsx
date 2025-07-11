@@ -3,7 +3,6 @@ import { NavbarDashboard } from "./NavbarDashboard";
 import { SidebarProvider } from "./ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
 import { useUsers } from "@/hooks/useUsers";
-import { useAuth } from "@/hooks/useAuth";
 
 export function UserLayout() {
   const { users } = useUsers();

@@ -1,9 +1,4 @@
-import {
-  DumbbellIcon,
-  LogOutIcon,
-  LayoutDashboard,
-  UserRound,
-} from "lucide-react";
+import { LogOutIcon, LayoutDashboard } from "lucide-react";
 
 import {
   Sidebar,
