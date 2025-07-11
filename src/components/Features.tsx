@@ -1,4 +1,3 @@
-// Importe os ícones que você vai usar
 import {
   Dumbbell,
   Users,
@@ -7,8 +6,6 @@ import {
   TrendingUp,
   UserCheck,
 } from "lucide-react";
-
-import Feature from './Feature';
 
 export function Features() {
   const trainerFeatures = [

@@ -15,10 +15,9 @@ export function AppRoutes() {
         <Route path="/register" element={<Register />} />
       </Route>
 
-     <Route path="/usuario-dashboard" element={<UserLayout/>}>
+      <Route path="/usuario-dashboard" element={<UserLayout />}>
         <Route index element={<UserDashboard />} />
       </Route>
-
     </Routes>
   );
 }
