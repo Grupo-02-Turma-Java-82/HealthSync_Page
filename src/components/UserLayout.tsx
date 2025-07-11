@@ -2,8 +2,12 @@ import { Outlet } from "react-router";
 import { NavbarDashboard } from "./NavbarDashboard";
 import { SidebarProvider } from "./ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
+import { useUsers } from "@/hooks/useUsers";
+import { useAuth } from "@/hooks/useAuth";
 
 export function UserLayout() {
+  const { users } = useUsers();
+
   return (
     <main className="w-full md:w-auto">
       <SidebarProvider>
@@ -11,9 +15,9 @@ export function UserLayout() {
 
         <main className="w-screen h-full">
           <NavbarDashboard
-            nameUser="Ricardo"
-            typeUser="Aluno"
-            photo="https://ik.imagekit.io/brunogodoy/default-image.jpg?updatedAt=1747847809671"
+            nameUser={users[0]?.nomeCompleto}
+            typeUser={users[0]?.tipoUsuario}
+            photo="https://ik.imagekit.io/brunogodoy/Z.png?updatedAt=1752202872620"
           />
           <Outlet />
         </main>

@@ -16,28 +16,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router-dom"; // Use react-router-dom
 import { Button } from "./ui/button";
+import { useUsers } from "@/hooks/useUsers"; // Importar useUsers
+import { useAuth } from "@/hooks/useAuth";
 
 const items = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/",
     icon: LayoutDashboard,
   },
-  {
-    title: "Treinos",
-    url: "/treinos",
-    icon: DumbbellIcon,
-  },
-  {
-    title: "Meu Perfil",
-    url: "/perfil",
-    icon: UserRound,
-  },
+  // {
+  //   title: "Treinos",
+  //   url: "/treinos",
+  //   icon: DumbbellIcon,
+  // },
+  // {
+  //   title: "Meu Perfil",
+  //   url: "/perfil",
+  //   icon: UserRound,
+  // },
 ];
 
 export function AppSidebar() {
+  const { users, isLoading } = useUsers(); // Obter users e isLoading do hook
+  const { remove } = useAuth();
+
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -49,6 +54,12 @@ export function AppSidebar() {
     isActive(path)
       ? "bg-primary text-primary-foreground font-medium"
       : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors";
+
+  // Encontrar o personal trainer na lista de usuários
+  // Assumindo que você tem um usuário com tipoUsuario "TREINADOR"
+  const personalTrainer = users.find(
+    (user) => user.tipoUsuario === "TREINADOR"
+  );
 
   return (
     <Sidebar>
@@ -82,13 +93,24 @@ export function AppSidebar() {
             <div className="flex gap-2">
               <img
                 src="https://ik.imagekit.io/brunogodoy/download.jpeg?updatedAt=1752187125543"
-                alt="Imagem do Personal ${img.personal}"
+                alt="Imagem do Personal" // Removida interpolação desnecessária
                 className="relative flex size-8 shrink-0 overflow-hidden rounded-full h-8 w-8"
               />
               <div className="flex flex-col">
-                <h1 className="text-sm font-medium text-foreground">
-                  Maria Helena
-                </h1>
+                {/* Exibir o nome do personal trainer se encontrado e não estiver carregando */}
+                {isLoading ? (
+                  <p className="text-sm font-medium animate-pulse">
+                    Carregando...
+                  </p>
+                ) : personalTrainer ? (
+                  <h1 className="text-sm font-medium text-foreground">
+                    {personalTrainer.nomeCompleto}
+                  </h1>
+                ) : (
+                  <h1 className="text-sm font-medium text-foreground">
+                    Personal não encontrado
+                  </h1>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Personal Trainer
                 </p>
@@ -98,7 +120,11 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t-[1px] py-4">
-        <Button className="w-full justify-start gap-4" variant="ghost">
+        <Button
+          className="w-full justify-start gap-4"
+          variant="ghost"
+          onClick={() => remove()}
+        >
           <LogOutIcon size={24} />
           <p className="text-base">Sair</p>
         </Button>

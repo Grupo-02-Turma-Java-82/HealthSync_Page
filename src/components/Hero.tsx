@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router";
+
 export function Hero() {
+  const navigate = useNavigate();
+
   return (
     <div className="container mx-auto px-4 mt-10 mb-8">
       <div className="text-center max-w-4xl mx-auto fade-in">
@@ -12,7 +16,7 @@ export function Hero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <a href="/#planos">
-            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md hero-gradient shadow-hero hover-lift font-heading font-semibold text-lg px-8">
+            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md hero-gradient shadow-hero hover-lift font-heading font-semibold text-lg px-8 cursor-pointer">
               Conheça os Planos
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +35,10 @@ export function Hero() {
               </svg>
             </button>
           </a>
-          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-md font-heading font-semibold text-lg px-8 hover-lift">
+          <button
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 rounded-md font-heading font-semibold text-lg px-8 hover-lift cursor-pointer"
+            onClick={() => navigate("/login")}
+          >
             Ver Demonstração
           </button>
         </div>

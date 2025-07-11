@@ -36,9 +36,8 @@ export function Navbar() {
           Entrar
         </Button>
 
-        <Button onClick={() => navigate("/cadastrar")}>Cadastrar</Button>
+        <Button onClick={() => navigate("/cadastro")}>Cadastrar</Button>
       </div>
     </nav>
   );
 }
-

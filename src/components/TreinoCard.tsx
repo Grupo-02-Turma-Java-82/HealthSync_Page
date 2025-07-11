@@ -1,4 +1,6 @@
+import { useState } from "react"; // Importar useState
 import type { Exercises } from "@/models/Exercises";
+import { Button } from "./ui/button"; // Importar Button
 import ExercisesCard from "./ExercisesCard";
 
 interface TreinoCardProps {
@@ -16,6 +18,11 @@ export default function TreinoCard({
   caloriasEstimadas,
   exercicios,
 }: TreinoCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false); // Estado para controlar a expansão
+
+  // Determina quais exercícios serão exibidos
+  const displayedExercises = isExpanded ? exercicios : exercicios.slice(0, 2);
+
   return (
     <section className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border">
       {/* Header */}
@@ -44,10 +51,19 @@ export default function TreinoCard({
 
       {/* Conteúdo: exercícios */}
       <div className="px-6 space-y-3 mb-6">
-        {exercicios.map((ex, i) => (
+        {displayedExercises.map((ex, i) => (
           <ExercisesCard key={ex.id} treino={ex} />
         ))}
       </div>
+
+      {/* Botão "Ver mais" / "Ver menos" */}
+      {exercicios.length > 4 && ( // Só mostra o botão se houver mais de 4 exercícios
+        <div className="flex justify-center px-6">
+          <Button variant="ghost" onClick={() => setIsExpanded(!isExpanded)}>
+            {isExpanded ? "Ver menos" : "Ver mais"}
+          </Button>
+        </div>
+      )}
     </section>
   );
 }
