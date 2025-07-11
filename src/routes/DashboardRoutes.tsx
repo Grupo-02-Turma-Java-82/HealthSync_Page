@@ -1,14 +1,13 @@
-import { DashboardLayout } from "@/components/DashboardLayout";
-import { PersonalDashboard } from "@/pages/PersonalDashboard";
-import { UserDashboard } from "@/pages/UserDashboard";
+import { UserLayout } from "@/components/UserLayout";
+import UserDashboard from "@/pages/UserDashboard";
+
 import { Routes, Route } from "react-router";
 
-export function DashboardRoutes() {
+export function UserRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<DashboardLayout />}>
+      <Route path="/dashboard" element={<UserLayout />}>
         <Route index element={<UserDashboard />} />
-        <Route path="/personal-dashboard" element={<PersonalDashboard />} />
       </Route>
     </Routes>
   );
