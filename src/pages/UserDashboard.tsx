@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UsersContext } from "@/contexts/UsersContext";
+import { UsersContext } from "@/contexts/UserContext";
 import WeeklySummaryCard from "@/components/WeeklySummaryCard";
 import RecentWorkoutsList from "@/components/RecentWorkoutsList";
 import TreinoCard from "@/components/TreinoCard";
