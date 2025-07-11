@@ -22,7 +22,7 @@ export function NewExercise() {
         </div>
       </div>
 
-      <FormExercises />
+      {/* <FormExercises /> */}
     </div>
   );
 }
