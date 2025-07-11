@@ -1,46 +1,46 @@
 import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useForm } from "react-hook-form";
-import { FormInput } from "./FormInput";
-import { Button } from "./ui/button";
-import { useUsers } from "@/hooks/useUsers";
 import { z } from "zod";
-import type { User } from "@/models/Users";
-import { format } from "date-fns";
 
-const formSchema = z.object({
-  nomeCompleto: z.string().min(3, { message: "Nome completo é obrigatório." }),
-  email: z.string().email({ message: "Por favor, insira um email válido." }),
-  senha: z
+// Componentes da UI (shadcn/ui)
+import { Button } from "./ui/button";
+import { Form } from "@/components/ui/form";
+
+// Componentes de formulário reutilizáveis (assumindo que existem no seu projeto)
+import { FormInput } from "./FormInput";
+import { FormSelect } from "./FormSelect";
+
+// Hooks e Tipos
+// import { useExercises } from "@/hooks/useExercises";
+import type { Exercises } from "@/models/Exercises";
+
+// --- 1. Schema Zod para o Formulário de Exercícios ---
+
+const exerciseFormSchema = z.object({
+  nome: z.string().min(3, { message: "O nome do exercício é obrigatório." }),
+  categoriaId: z.coerce.number({ required_error: "Selecione uma categoria." }),
+  url_video_demonstrativo: z
     .string()
-    .min(6, { message: "A senha deve ter no mínimo 6 caracteres." })
-    .optional()
-    .or(z.literal("")),
-  dataNascimento: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Data de nascimento inválida.",
+    .url({ message: "Por favor, insira uma URL válida." })
+    .or(z.literal(""))
+    .optional(),
+  descricao_detalhada: z
+    .string()
+    .min(10, { message: "A descrição deve ter no mínimo 10 caracteres." }),
+  nivel_dificuldade: z.enum(["INICIANTE", "INTERMEDIÁRIO", "AVANCADO"], {
+    required_error: "Selecione o nível de dificuldade.",
   }),
-  genero: z.enum(["Masculino", "Feminino", "Não-binário", "Outro"]),
-  alturaCm: z.coerce
-    .number()
-    .positive({ message: "Altura deve ser um número positivo." }),
-  pesoKg: z.coerce
-    .number()
-    .positive({ message: "Peso deve ser um número positivo." }),
-  objetivoPrincipal: z.string().min(3, { message: "Objetivo é obrigatório." }),
+  equipamento_necessario: z
+    .string()
+    .min(3, { message: "Equipamento é obrigatório." }),
 });
 
-type FormStudentsProps = {
+// --- 2. Componente Principal do Formulário de Exercícios ---
+
+type FormExercisesProps = {
   isEditMode: boolean;
-  initialData?: User | null;
+  initialData?: Exercises | null;
   onClose?: () => void;
 };
 
@@ -48,162 +48,115 @@ export function FormExercises({
   isEditMode,
   initialData,
   onClose,
-}: FormStudentsProps) {
-  const { addUser, updateUser } = useUsers();
+}: FormExercisesProps) {
+  // const { addExercise, updateExercise, categories } = useExercises();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof exerciseFormSchema>>({
+    resolver: zodResolver(exerciseFormSchema),
     defaultValues: {
-      nomeCompleto: "",
-      email: "",
-      senha: "",
-      dataNascimento: "",
-      genero: "Masculino",
-      alturaCm: 0,
-      pesoKg: 0,
-      objetivoPrincipal: "",
+      nome: "",
+      categoriaId: undefined,
+      url_video_demonstrativo: "",
+      descricao_detalhada: "",
+      nivel_dificuldade: undefined,
+      equipamento_necessario: "",
     },
   });
 
   useEffect(() => {
     if (isEditMode && initialData) {
       form.reset({
-        nomeCompleto: initialData.nomeCompleto,
-        email: initialData.email,
-        dataNascimento: format(initialData.dataNascimento, "yyyy-MM-dd"),
-        genero: initialData.genero as
-          | "Masculino"
-          | "Feminino"
-          | "Não-binário"
-          | "Outro",
-        alturaCm: initialData.alturaCm,
-        pesoKg: initialData.pesoKg,
-        objetivoPrincipal: initialData.objetivoPrincipal,
+        nome: initialData.nome,
+        categoriaId: initialData.categoria.id,
+        url_video_demonstrativo: initialData.url_video_demonstrativo,
+        descricao_detalhada: initialData.descricao_detalhada,
+        nivel_dificuldade: initialData.nivel_dificuldade,
+        equipamento_necessario: initialData.equipamento_necessario,
       });
     }
   }, [isEditMode, initialData, form]);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const dataToSend = {
-      ...values,
-      dataNascimento: new Date(values.dataNascimento),
-    };
+  // async function onSubmit(values: z.infer<typeof exerciseFormSchema>) {
+  //   const selectedCategory = categories.find(
+  //     (cat) => cat.id === values.categoriaId
+  //   );
+  //   if (!selectedCategory) {
+  //     alert("Categoria inválida selecionada.");
+  //     return;
+  //   }
 
-    if (isEditMode && !values.senha) {
-      delete (dataToSend as Partial<typeof dataToSend>).senha;
-    }
+  //   const dataToSend = { ...values, categoria: selectedCategory };
+  //   delete (dataToSend as any).categoriaId;
 
-    if (isEditMode && initialData) {
-      console.log("Updating user:", initialData.id, dataToSend);
-    } else {
-      console.log("Adding user:", dataToSend);
-    }
+  //   if (isEditMode && initialData) {
+  //     await updateExercise(initialData.id, dataToSend);
+  //   } else {
+  //     await addExercise(dataToSend);
+  //   }
 
-    if (onClose) onClose();
-    form.reset();
-  }
+  //   if (onClose) onClose();
+  //   form.reset();
+  // }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 bg-card border border-border p-6 rounded-lg"
-      >
+      <form className="flex flex-col gap-4 bg-card border border-border p-6 rounded-lg">
         <div className="grid md:grid-cols-2 gap-4">
           <FormInput
             control={form.control}
-            name="nomeCompleto"
-            label="Nome Completo *"
-            placeholder="Digite o nome do aluno..."
+            name="nome"
+            label="Nome do Exercício *"
+            placeholder="Ex: Supino Reto"
           />
-          <FormInput
+          {/* <FormSelect
             control={form.control}
-            name="email"
-            label="Email *"
-            placeholder="Digite o email do aluno..."
-          />
+            name="categoriaId"
+            label="Categoria *"
+            placeholder="Selecione uma categoria"
+            options={categories.map((cat) => ({
+              value: String(cat.id),
+              label: cat.nome,
+            }))}
+          /> */}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          <FormInput
-            control={form.control}
-            name="dataNascimento"
-            label="Data de Nascimento *"
-            type="date"
-          />
-          <FormField
-            control={form.control}
-            name="genero"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Gênero *</FormLabel>
-                <FormControl className="flex flex-col sm:flex-row items-center">
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="flex space-x-4 py-2"
-                  >
-                    <FormItem className="flex items-center space-x-2 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="Masculino" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Masculino</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-2 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="Feminino" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Feminino</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-2 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="Outro" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Outro</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormInput
+          control={form.control}
+          name="descricao_detalhada"
+          label="Descrição Detalhada *"
+          placeholder="Descreva a execução correta do exercício..."
+        />
 
         <div className="grid md:grid-cols-2 gap-4">
-          <FormInput
+          <FormSelect
             control={form.control}
-            name="alturaCm"
-            label="Altura (cm) *"
-            type="number"
+            name="nivel_dificuldade"
+            label="Nível de Dificuldade *"
+            placeholder="Selecione o nível"
+            options={[
+              { value: "INICIANTE", label: "Iniciante" },
+              { value: "INTERMEDIÁRIO", label: "Intermediário" },
+              { value: "AVANCADO", label: "Avançado" },
+            ]}
           />
           <FormInput
             control={form.control}
-            name="pesoKg"
-            label="Peso (Kg) *"
-            type="number"
+            name="equipamento_necessario"
+            label="Equipamento Necessário *"
+            placeholder="Ex: Halteres, Barra, Nenhum"
           />
         </div>
 
         <FormInput
           control={form.control}
-          name="objetivoPrincipal"
-          label="Objetivo Principal *"
-          placeholder="Ex: Hipertrofia, Perda de peso..."
+          name="url_video_demonstrativo"
+          label="URL do Vídeo (Opcional)"
+          placeholder="https://youtube.com/exemplo"
         />
-
-        {!isEditMode && (
-          <FormInput
-            control={form.control}
-            name="senha"
-            label="Senha *"
-            type="password"
-            placeholder="Digite a senha..."
-          />
-        )}
 
         <div className="flex justify-end mt-4">
           <Button type="submit" className="cursor-pointer">
-            {!isEditMode ? "Atualizar Aluno" : "Cadastrar Aluno"}
+            {isEditMode ? "Atualizar Exercício" : "Cadastrar Exercício"}
           </Button>
         </div>
       </form>
