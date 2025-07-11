@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router";
 export function UserRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<UserLayout />}>
+      <Route path="/dashboard" element={<UserLayout />}>
         <Route index element={<UserDashboard />} />
       </Route>
     </Routes>

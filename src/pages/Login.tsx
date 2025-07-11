@@ -45,7 +45,8 @@ export function Login() {
 
       auth.save(response.data);
 
-      navigate("/");
+
+      navigate("/dashboard");
     } catch (e) {
       if (e instanceof AxiosError && e.response) {
         setErrorMessage(
