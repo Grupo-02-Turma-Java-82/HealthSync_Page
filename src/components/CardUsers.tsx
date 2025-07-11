@@ -17,9 +17,11 @@ type Props = ComponentProps<"div"> & {
 export function CardUsers({ title, subTitle, icon, users, isLoading }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const sortedUsers = [...users].sort(
-    (a, b) => b.dataCadastro.getTime() - a.dataCadastro.getTime()
-  );
+  const sortedUsers = [...users].sort((a, b) => {
+    const dateA = new Date(a.dataCadastro);
+    const dateB = new Date(b.dataCadastro);
+    return dateB.getTime() - dateA.getTime();
+  });
 
   const displayedUsers = isExpanded ? sortedUsers : sortedUsers.slice(0, 4);
 

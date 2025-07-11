@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router";
 import { AppRoutes } from "./AppRoutes";
 import { useAuth } from "@/hooks/useAuth";
 import { Loader } from "lucide-react";
-import { PersonalDashboardRoutes } from "./PersonalDashboard";
+import { PersonalDashboardRoutes } from "./PersonalDashboardRoutes";
 import { UserRoutes } from "./DashboardRoutes";
 
 export function Routes() {

@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useUsers } from "@/hooks/useUsers";
 import { Loader, PlusIcon } from "lucide-react";
 import { FormExercises } from "@/components/FormExercises";
 import { ExerciseList } from "@/components/ExerciseList";
+import { useExercises } from "@/hooks/useExercises";
 
 export function Exercises() {
-  const { users, isLoading } = useUsers();
+  const { exercises, isLoading } = useExercises();
   const [isForm, setIsForm] = useState(false);
 
-  const allExercises = users?.flatMap((user) => user.exercicios) || [];
+  const allExercises = exercises?.flatMap((exercise) => exercise) || [];
+
+  console.log(allExercises);
 
   return (
     <div className="flex flex-col p-6">
@@ -32,7 +34,7 @@ export function Exercises() {
       ) : (
         <>
           {isForm ? (
-            <FormExercises isEditMode={isForm} />
+            <FormExercises />
           ) : (
             <ExerciseList exercises={allExercises} />
           )}

@@ -111,7 +111,7 @@ export function Login() {
 
             <Button disabled={isLoading} type="submit" className="w-full mt-2">
               {isLoading ? (
-                <Loader size={24} className="animate-spin" />
+                <Loader size={26} className="animate-spin" />
               ) : (
                 "Entrar"
               )}

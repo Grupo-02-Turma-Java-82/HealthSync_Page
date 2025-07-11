@@ -1,14 +1,6 @@
-import { CardDashboard } from "@/components/CardDashboard";
-import { CardExercises } from "@/components/CardExercises";
-import { CardUsers } from "@/components/CardUsers";
 import { FormExercises } from "@/components/FormExercises";
-import { Button } from "@/components/ui/button";
-import { useUsers } from "@/hooks/useUsers";
-import { PlusIcon } from "lucide-react";
 
 export function NewExercise() {
-  const { users, isLoading } = useUsers();
-
   return (
     <div className="flex flex-col p-6 gap-6">
       <div className="flex justify-between items-center">
@@ -22,7 +14,7 @@ export function NewExercise() {
         </div>
       </div>
 
-      {/* <FormExercises /> */}
+      <FormExercises />
     </div>
   );
 }

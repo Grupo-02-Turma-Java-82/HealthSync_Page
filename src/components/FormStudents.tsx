@@ -36,6 +36,7 @@ const formSchema = z.object({
     .number()
     .positive({ message: "Peso deve ser um número positivo." }),
   objetivoPrincipal: z.string().min(3, { message: "Objetivo é obrigatório." }),
+  tipoUsuario: z.enum(["ALUNO", "TREINADOR", "ADMINISTRADOR"]),
 });
 
 type FormStudentsProps = {
@@ -49,7 +50,7 @@ export function FormStudents({
   initialData,
   onClose,
 }: FormStudentsProps) {
-  const { addUser, updateUser } = useUsers();
+  const { update, create } = useUsers();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,6 +63,7 @@ export function FormStudents({
       alturaCm: 0,
       pesoKg: 0,
       objetivoPrincipal: "",
+      tipoUsuario: "ALUNO",
     },
   });
 
@@ -70,7 +72,10 @@ export function FormStudents({
       form.reset({
         nomeCompleto: initialData.nomeCompleto,
         email: initialData.email,
-        dataNascimento: format(initialData.dataNascimento, "yyyy-MM-dd"),
+        dataNascimento: format(
+          new Date(initialData.dataNascimento),
+          "yyyy-MM-dd"
+        ),
         genero: initialData.genero as
           | "Masculino"
           | "Feminino"
@@ -79,24 +84,69 @@ export function FormStudents({
         alturaCm: initialData.alturaCm,
         pesoKg: initialData.pesoKg,
         objetivoPrincipal: initialData.objetivoPrincipal,
+        tipoUsuario: initialData.tipoUsuario,
+      });
+    } else {
+      form.reset({
+        nomeCompleto: "",
+        email: "",
+        senha: "",
+        dataNascimento: "",
+        genero: "Masculino",
+        alturaCm: 0,
+        pesoKg: 0,
+        objetivoPrincipal: "",
+        tipoUsuario: "ALUNO",
       });
     }
   }, [isEditMode, initialData, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const dataToSend = {
+    const commonFormData = {
       ...values,
       dataNascimento: new Date(values.dataNascimento),
     };
 
-    if (isEditMode && !values.senha) {
-      delete (dataToSend as Partial<typeof dataToSend>).senha;
-    }
+    if (isEditMode) {
+      if (!initialData?.id) {
+        console.error("Erro: ID do usuário não encontrado para atualização.");
+        return;
+      }
 
-    if (isEditMode && initialData) {
-      console.log("Updating user:", initialData.id, dataToSend);
+      const dataToUpdate: User = {
+        ...initialData,
+        ...commonFormData,
+        id: initialData.id,
+        senha: values.senha || initialData.senha, // Garante que a senha é uma string
+      };
+
+      // REMOVIDA A LINHA PROBLEMÁTICA: delete dataToUpdate.senha;
+      // Se a API espera que a senha seja omitida quando não alterada,
+      // você precisaria ajustar o tipo 'User' para 'senha?: string;'
+      // ou a assinatura da função 'update' no contexto para 'Partial<User>'.
+      // No entanto, para a tipagem atual, a senha deve ser sempre uma string.
+
+      await update(dataToUpdate);
+      console.log("Updating user:", dataToUpdate);
     } else {
-      console.log("Adding user:", dataToSend);
+      if (!values.senha) {
+        console.error(
+          "Erro: Senha é obrigatória para o cadastro de um novo usuário."
+        );
+        return;
+      }
+
+      const dataToCreate: Omit<
+        User,
+        "id" | "dataCadastro" | "exercicios" | "imc"
+      > = {
+        ...commonFormData,
+        senha: values.senha as string,
+        tipoUsuario: commonFormData.tipoUsuario,
+      };
+
+      await create(dataToCreate);
+      console.log("Adding user:", dataToCreate);
     }
 
     if (onClose) onClose();
@@ -191,6 +241,43 @@ export function FormStudents({
           placeholder="Ex: Hipertrofia, Perda de peso..."
         />
 
+        <FormField
+          control={form.control}
+          name="tipoUsuario"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Tipo de Usuário *</FormLabel>
+              <FormControl className="flex flex-col sm:flex-row items-center">
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex space-x-4 py-2"
+                >
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="ALUNO" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Aluno</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="TREINADOR" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Personal</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="ADMINISTRADOR" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Administrador</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {!isEditMode && (
           <FormInput
             control={form.control}
@@ -203,7 +290,7 @@ export function FormStudents({
 
         <div className="flex justify-end mt-4">
           <Button type="submit" className="cursor-pointer">
-            {!isEditMode ? "Atualizar Aluno" : "Cadastrar Aluno"}
+            {isEditMode ? "Atualizar Aluno" : "Cadastrar Aluno"}
           </Button>
         </div>
       </form>

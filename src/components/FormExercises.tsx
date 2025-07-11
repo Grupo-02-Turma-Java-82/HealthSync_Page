@@ -1,164 +1,288 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-// Componentes da UI (shadcn/ui)
-import { Button } from "./ui/button";
-import { Form } from "@/components/ui/form";
-
-// Componentes de formulário reutilizáveis (assumindo que existem no seu projeto)
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
 import { FormInput } from "./FormInput";
-import { FormSelect } from "./FormSelect";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-// Hooks e Tipos
-// import { useExercises } from "@/hooks/useExercises";
-import type { Exercises } from "@/models/Exercises";
+import type { Categories } from "@/models/Categories";
+import { useExercises } from "@/hooks/useExercises";
+import { api } from "@/services/api";
+import { AxiosError } from "axios";
+import type { CreateExercisePayload } from "@/models/Exercises";
+import { Loader } from "lucide-react";
+import { useNavigate } from "react-router";
 
-// --- 1. Schema Zod para o Formulário de Exercícios ---
-
-const exerciseFormSchema = z.object({
-  nome: z.string().min(3, { message: "O nome do exercício é obrigatório." }),
-  categoriaId: z.coerce.number({ required_error: "Selecione uma categoria." }),
+const formSchema = z.object({
+  nome: z
+    .string()
+    .min(5, { message: "O nome deve ter no mínimo 5 caracteres." })
+    .max(100, { message: "O nome deve ter no máximo 100 caracteres." }),
+  categoriaId: z.coerce
+    .number()
+    .positive({ message: "Selecione uma categoria." }),
+  descricao_detalhada: z.string().optional(),
+  nivel_dificuldade: z.enum(["INICIANTE", "INTERMEDIÁRIO", "AVANCADO"], {
+    errorMap: () => ({ message: "Selecione um nível de dificuldade válido." }),
+  }),
   url_video_demonstrativo: z
     .string()
-    .url({ message: "Por favor, insira uma URL válida." })
-    .or(z.literal(""))
-    .optional(),
-  descricao_detalhada: z
-    .string()
-    .min(10, { message: "A descrição deve ter no mínimo 10 caracteres." }),
-  nivel_dificuldade: z.enum(["INICIANTE", "INTERMEDIÁRIO", "AVANCADO"], {
-    required_error: "Selecione o nível de dificuldade.",
-  }),
+    .url({ message: "Insira uma URL de vídeo válida." })
+    .optional()
+    .or(z.literal("")),
   equipamento_necessario: z
     .string()
-    .min(3, { message: "Equipamento é obrigatório." }),
+    .min(3, { message: "O equipamento necessário é obrigatório." })
+    .optional()
+    .or(z.literal("")),
 });
 
-// --- 2. Componente Principal do Formulário de Exercícios ---
-
 type FormExercisesProps = {
-  isEditMode: boolean;
-  initialData?: Exercises | null;
-  onClose?: () => void;
+  // isEditMode?: boolean;
+  // initialData?: Exercises | null;
+  // onSubmitSuccess?: () => void;
 };
 
-export function FormExercises({
-  isEditMode,
-  initialData,
-  onClose,
-}: FormExercisesProps) {
-  // const { addExercise, updateExercise, categories } = useExercises();
+export function FormExercises({}: FormExercisesProps) {
+  const { create, isLoading } = useExercises();
 
-  const form = useForm<z.infer<typeof exerciseFormSchema>>({
-    resolver: zodResolver(exerciseFormSchema),
+  const navigate = useNavigate();
+
+  const [categories, setCategories] = useState<Categories[]>([]);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       nome: "",
       categoriaId: undefined,
-      url_video_demonstrativo: "",
       descricao_detalhada: "",
-      nivel_dificuldade: undefined,
+      nivel_dificuldade: "INICIANTE",
+      url_video_demonstrativo: "",
       equipamento_necessario: "",
     },
   });
 
   useEffect(() => {
-    if (isEditMode && initialData) {
-      form.reset({
-        nome: initialData.nome,
-        categoriaId: initialData.categoria.id,
-        url_video_demonstrativo: initialData.url_video_demonstrativo,
-        descricao_detalhada: initialData.descricao_detalhada,
-        nivel_dificuldade: initialData.nivel_dificuldade,
-        equipamento_necessario: initialData.equipamento_necessario,
-      });
+    async function fetchCategories() {
+      setIsCategoriesLoading(true);
+      setCategoriesError(null);
+      try {
+        const response = await api.get<Categories[]>("/categorias");
+        setCategories(response.data || []);
+      } catch (e) {
+        console.error("Erro ao buscar categorias:", e);
+        if (e instanceof AxiosError) {
+          setCategoriesError(
+            e.response?.data.message ||
+              "Não foi possível carregar as categorias."
+          );
+        } else {
+          setCategoriesError(
+            "Ocorreu um erro desconhecido ao carregar categorias."
+          );
+        }
+      } finally {
+        setIsCategoriesLoading(false);
+      }
     }
-  }, [isEditMode, initialData, form]);
 
-  // async function onSubmit(values: z.infer<typeof exerciseFormSchema>) {
-  //   const selectedCategory = categories.find(
-  //     (cat) => cat.id === values.categoriaId
-  //   );
-  //   if (!selectedCategory) {
-  //     alert("Categoria inválida selecionada.");
-  //     return;
-  //   }
+    fetchCategories();
+  }, []);
 
-  //   const dataToSend = { ...values, categoria: selectedCategory };
-  //   delete (dataToSend as any).categoriaId;
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const selectedCategory = categories.find(
+      (cat) => cat.id === values.categoriaId
+    );
 
-  //   if (isEditMode && initialData) {
-  //     await updateExercise(initialData.id, dataToSend);
-  //   } else {
-  //     await addExercise(dataToSend);
-  //   }
+    if (!selectedCategory) {
+      console.error("Categoria selecionada inválida ou não encontrada.");
+      form.setError("categoriaId", {
+        type: "manual",
+        message: "Selecione uma categoria válida.",
+      });
+      return;
+    }
 
-  //   if (onClose) onClose();
-  //   form.reset();
-  // }
+    const newExerciseData: CreateExercisePayload = {
+      nome: values.nome,
+      categoria: selectedCategory,
+      descricao_detalhada: values.descricao_detalhada ?? "",
+      nivel_dificuldade: values.nivel_dificuldade,
+      url_video_demonstrativo: values.url_video_demonstrativo ?? "",
+      equipamento_necessario: values.equipamento_necessario ?? "",
+    };
+
+    if (!newExerciseData.categoria) {
+      console.error("Categoria selecionada inválida.");
+      form.setError("categoriaId", {
+        type: "manual",
+        message: "Selecione uma categoria válida.",
+      });
+      return;
+    }
+
+    create(newExerciseData);
+    navigate("/exercicios");
+  }
 
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-4 bg-card border border-border p-6 rounded-lg">
-        <div className="grid md:grid-cols-2 gap-4">
-          <FormInput
-            control={form.control}
-            name="nome"
-            label="Nome do Exercício *"
-            placeholder="Ex: Supino Reto"
-          />
-          {/* <FormSelect
-            control={form.control}
-            name="categoriaId"
-            label="Categoria *"
-            placeholder="Selecione uma categoria"
-            options={categories.map((cat) => ({
-              value: String(cat.id),
-              label: cat.nome,
-            }))}
-          /> */}
-        </div>
-
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 p-6 bg-card rounded-lg shadow-sm"
+      >
         <FormInput
           control={form.control}
-          name="descricao_detalhada"
-          label="Descrição Detalhada *"
-          placeholder="Descreva a execução correta do exercício..."
+          name="nome"
+          label="Nome do Exercício *"
+          placeholder="Ex: Supino Reto com Barra"
         />
 
-        <div className="grid md:grid-cols-2 gap-4">
-          <FormSelect
-            control={form.control}
-            name="nivel_dificuldade"
-            label="Nível de Dificuldade *"
-            placeholder="Selecione o nível"
-            options={[
-              { value: "INICIANTE", label: "Iniciante" },
-              { value: "INTERMEDIÁRIO", label: "Intermediário" },
-              { value: "AVANCADO", label: "Avançado" },
-            ]}
-          />
-          <FormInput
-            control={form.control}
-            name="equipamento_necessario"
-            label="Equipamento Necessário *"
-            placeholder="Ex: Halteres, Barra, Nenhum"
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="categoriaId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Categoria *</FormLabel>
+              <Select
+                onValueChange={(value) => field.onChange(parseInt(value))}
+                value={field.value?.toString()}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a categoria" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {isCategoriesLoading ? (
+                    <SelectItem value="loading-placeholder" disabled>
+                      Carregando categorias...
+                    </SelectItem>
+                  ) : categoriesError ? (
+                    <SelectItem
+                      value="error-placeholder"
+                      disabled
+                      className="text-red-500"
+                    >
+                      {categoriesError}
+                    </SelectItem>
+                  ) : categories.length === 0 ? (
+                    <SelectItem value="no-categories-placeholder" disabled>
+                      Nenhuma categoria encontrada.
+                    </SelectItem>
+                  ) : (
+                    categories.map((categoria) => (
+                      <SelectItem
+                        key={categoria.id}
+                        value={categoria.id.toString()}
+                      >
+                        {categoria.nome}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="descricao_detalhada"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descrição Detalhada</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Descreva o exercício em detalhes..."
+                  className="resize-y min-h-[100px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="nivel_dificuldade"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormLabel>Nível de Dificuldade *</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex flex-col sm:flex-row space-x-0 sm:space-x-4 space-y-2 sm:space-y-0"
+                >
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem value="INICIANTE" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Iniciante</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem value="INTERMEDIÁRIO" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Intermediário</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem value="AVANCADO" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Avançado</FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormInput
           control={form.control}
           name="url_video_demonstrativo"
-          label="URL do Vídeo (Opcional)"
-          placeholder="https://youtube.com/exemplo"
+          label="URL do Vídeo Demonstrativo"
+          placeholder="Ex: https://www.youtube.com/watch?v=exemplo"
+          type="url"
         />
 
-        <div className="flex justify-end mt-4">
-          <Button type="submit" className="cursor-pointer">
-            {isEditMode ? "Atualizar Exercício" : "Cadastrar Exercício"}
-          </Button>
-        </div>
+        <FormInput
+          control={form.control}
+          name="equipamento_necessario"
+          label="Equipamento Necessário"
+          placeholder="Ex: Halteres, Barra, Máquina"
+        />
+
+        <Button disabled={isLoading} type="submit" className="w-full">
+          {isLoading ? (
+            <Loader size={26} className="animate-spin" />
+          ) : (
+            "Cadastrar Exercício"
+          )}
+        </Button>
       </form>
     </Form>
   );

@@ -35,6 +35,17 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "imc",
     header: "IMC",
+    cell: ({ row }) => {
+      const imc = row.original.imc;
+
+      if (typeof imc !== "number") {
+        return <span>-</span>;
+      }
+
+      const imcFormatado = imc.toFixed(2);
+
+      return <div>{imcFormatado}</div>;
+    },
   },
   {
     accessorKey: "dataCadastro",

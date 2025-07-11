@@ -13,7 +13,7 @@ export type User = {
   imc?: number;
   objetivoPrincipal: string;
   dataCadastro: Date;
-  tipoUsuario: "ALUNO" | "PERSONAL" | "ADMINISTRADOR";
+  tipoUsuario: "ALUNO" | "TREINADOR" | "ADMINISTRADOR";
 };
 
 export type UserLogin = {
