@@ -1,8 +1,6 @@
-// src/components/FormInput.tsx
-
 import type { ComponentProps, ReactNode } from "react";
 import type { Control } from "react-hook-form";
-import { cn } from "@/lib/utils"; // Importe o utilitário `cn`
+import { cn } from "@/lib/utils";
 import {
   FormControl,
   FormField,
@@ -53,7 +51,8 @@ export function FormInput({
                 {...rest}
                 className={cn(
                   "h-full w-full border-none bg-transparent p-3 shadow-none outline-none ring-offset-0",
-                  "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 pl-10"
+                  "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+                  icon && "pl-10"
                 )}
               />
             </div>

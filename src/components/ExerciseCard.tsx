@@ -31,10 +31,10 @@ const getDifficultyVariant = (
 
 export function ExerciseCard({ exercicio }: ExerciseCardProps) {
   return (
-    <Card className="flex flex-col h-full">
+    <Card className="flex flex-col h-full hover:scale-105 transition ease-in-out">
       <CardHeader>
         <CardTitle>{exercicio.nome}</CardTitle>
-        <CardDescription>{exercicio.categoria.nome}</CardDescription>
+        <CardDescription>{exercicio.categoria?.nome}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="text-sm text-muted-foreground mb-4">
@@ -45,12 +45,17 @@ export function ExerciseCard({ exercicio }: ExerciseCardProps) {
             href={exercicio.url_video_demonstrativo}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-sm font-semibold text-blue-500 hover:underline"
+            className="flex items-center gap-2 text-sm font-semibold text-blue-500 hover:underline mb-4"
           >
             <Youtube size={24} />
             Assistir ao vídeo de demonstração
           </a>
         )}
+        <div className="text-xs text-muted-foreground mt-2 sm:mt-0">
+          Criado em:{" "}
+          {exercicio.dataCriacao &&
+            new Date(exercicio.dataCriacao).toLocaleDateString("pt-BR")}
+        </div>
       </CardContent>
       <CardFooter className="flex flex-col items-start gap-y-2 sm:flex-row sm:flex-wrap sm:justify-between sm:items-center">
         <div className="flex flex-wrap gap-2">

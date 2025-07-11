@@ -10,3 +10,5 @@ export type Exercises = {
   equipamento_necessario: string;
   dataCriacao: Date;
 };
+
+export type CreateExercisePayload = Omit<Exercises, "id" | "dataCriacao">;

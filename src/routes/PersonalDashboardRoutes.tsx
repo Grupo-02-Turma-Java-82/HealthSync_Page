@@ -20,7 +20,7 @@ export function PersonalDashboardRoutes() {
         <Route index element={<Exercises />} />
       </Route>
 
-      <Route path="/exercicio" element={<PersonalLayout />}>
+      <Route path="/novo-exercicio" element={<PersonalLayout />}>
         <Route index element={<NewExercise />} />
       </Route>
     </Routes>

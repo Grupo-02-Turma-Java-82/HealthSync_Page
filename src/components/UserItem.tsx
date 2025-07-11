@@ -15,9 +15,8 @@ export function UserItem({ users }: Props) {
     locale: ptBR,
   });
 
-  const diffHours =
-    (new Date().getTime() - createdAt.getTime()) / (50000 * 60 * 120);
-  const status = diffHours > 4 ? "default" : "secondary";
+  const diffHours = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60);
+  const status = diffHours <= 4 ? "default" : "secondary";
 
   return (
     <div className="flex justify-between items-center">
@@ -31,7 +30,7 @@ export function UserItem({ users }: Props) {
       </div>
 
       <Badge variant={status}>
-        {status == "default" ? "Ativo" : "Inativo"}
+        {status === "default" ? "Ativo" : "Inativo"}
       </Badge>
     </div>
   );

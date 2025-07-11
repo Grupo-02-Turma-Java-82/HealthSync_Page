@@ -1,38 +1,31 @@
 import { useState, type ComponentProps } from "react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { Card } from "./ui/card";
-import type { User } from "@/models/Users";
 import { Loader } from "lucide-react";
 import { Button } from "./ui/button";
 import { ExerciseItem } from "./ExerciseItem";
+import type { Exercises } from "@/models/Exercises";
 
 type Props = ComponentProps<"div"> & {
   title: string;
   subTitle: string;
   icon: IconName;
-  users: User[];
+  exercises: Exercises[];
   isLoading: boolean;
 };
 
-export function CardExercises({
+export function CardRecentExercises({
   title,
   subTitle,
   icon,
-  users,
+  exercises,
   isLoading,
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const allExercises = users
-    .flatMap((user) => user.exercicios)
-    .sort(
-      (a, b) =>
-        new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
-    );
-
   const displayedExercises = isExpanded
-    ? allExercises
-    : allExercises.slice(0, 4);
+    ? exercises || []
+    : (exercises || []).slice(0, 4);
 
   return (
     <Card className="p-6">
@@ -50,16 +43,27 @@ export function CardExercises({
         </div>
       ) : (
         <>
-          <div className="flex flex-col gap-4 mt-4">
-            {displayedExercises.map((exercise) => (
-              <ExerciseItem key={exercise.id} exercises={exercise} />
-            ))}
-          </div>
+          {(exercises ?? []).length === 0 ? (
+            <div className="text-center text-muted-foreground py-10">
+              <p>Nenhum exercício encontrado.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 mt-4">
+              {displayedExercises.map((exercise) => (
+                <ExerciseItem key={exercise.id} exercises={exercise} />
+              ))}
+            </div>
+          )}
 
-          {allExercises.length > 4 && (
-            <Button variant="ghost" onClick={() => setIsExpanded(!isExpanded)}>
-              {isExpanded ? "Ver menos" : "Ver todos os exercícios"}
-            </Button>
+          {(exercises ?? []).length > 4 && (
+            <div className="mt-4 flex justify-center">
+              <Button
+                variant="ghost"
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? "Ver menos" : "Ver todos os exercícios"}
+              </Button>
+            </div>
           )}
         </>
       )}

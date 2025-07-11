@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, data.token);
 
-    api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+    api.defaults.headers.common["Authorization"] = `${data.token}`;
 
     setSession(data);
   }
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`);
 
     if (token && user) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      api.defaults.headers.common["Authorization"] = `${token}`;
 
       setSession({
         token,

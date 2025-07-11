@@ -25,7 +25,7 @@ import { useAuth } from "@/hooks/useAuth";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
@@ -52,6 +52,12 @@ const items = [
 
 export function PersonalSidebar() {
   const { remove } = useAuth();
+
+  function logout() {
+    if (window.confirm("Deseja realmente deslogar do sistema?")) {
+      remove();
+    }
+  }
 
   const location = useLocation();
   const currentPath = location.pathname;
@@ -94,7 +100,7 @@ export function PersonalSidebar() {
         <Button
           className="w-full justify-start gap-4"
           variant="ghost"
-          onClick={() => remove()}
+          onClick={logout}
         >
           <LogOutIcon size={24} />
           <p className="text-base">Sair</p>
