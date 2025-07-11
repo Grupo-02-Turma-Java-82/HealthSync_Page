@@ -1,69 +1,84 @@
-# React + TypeScript + Vite
+# HealthSync
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+O HealthSync é uma plataforma completa para personal trainers e seus alunos, projetada para otimizar a gestão de treinos, acompanhar o progresso e fortalecer a comunicação.
 
-Currently, two official plugins are available:
+<p align="center">
+  <img src="https://ik.imagekit.io/brunogodoy/LogoSync.png?updatedAt=1752036904552" alt="HealthSync Logo" width="150"/>
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<p align="center">
+  <img alt="Versão do Projeto" src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge">
+  <img alt="Licença" src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge">
+  <img alt="React" src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react">
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-7.0-purple?style=for-the-badge&logo=vite">
+</p>
 
-## Expanding the ESLint configuration
+## 📋 Índice
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- [Sobre o Projeto](#-sobre-o-projeto)
+- [✨ Funcionalidades](#-funcionalidades)
+- [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
+- [🏁 Como Executar o Projeto](#-como-executar-o-projeto)
+- [🖼️ Telas da Aplicação](#-telas-da-aplicação)
+- [📝 Licença](#-licença)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📖 Sobre o Projeto
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+O HealthSync foi criado para ser a plataforma definitiva que conecta personal trainers e alunos em busca de resultados reais. A ideia é centralizar todas as ferramentas necessárias para que os treinadores possam gerenciar seus clientes de forma eficiente e para que os alunos tenham uma experiência de treino motivadora e simplificada.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ✨ Funcionalidades
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+O projeto oferece um conjunto de funcionalidades poderosas, tanto para os treinadores quanto para os alunos:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Para Personal Trainers:
+- **Gestão de Alunos:** Gerencie todos os seus alunos em um só lugar, com perfis detalhados e acompanhamento personalizado.
+- **Criação de Treinos Ilimitados:** Crie e personalize treinos de forma ilimitada, adaptando-os às necessidades de cada aluno.
+- **Biblioteca de Exercícios:** Organize uma biblioteca pessoal de exercícios com descrições, vídeos e categorias customizadas.
+- **Dashboard de Atividades:** Acompanhe o progresso e a atividade recente de todos os seus alunos de forma centralizada.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Para Alunos:
+- **Acesso Fácil aos Treinos:** Acesse seus treinos a qualquer hora e em qualquer lugar, com uma interface intuitiva e responsiva.
+- **Acompanhamento de Progresso:** Visualize sua evolução com gráficos detalhados e um histórico completo dos treinos realizados.
+- **Interface Intuitiva:** Navegue facilmente pela plataforma com um design moderno e uma experiência de usuário otimizada.
+- **Dashboard Pessoal:** Veja um resumo semanal, seu IMC e os treinos recentes em um painel de controle completo.
+
+## 🚀 Tecnologias Utilizadas
+
+Este projeto foi desenvolvido utilizando as seguintes tecnologias:
+
+- **React:** Biblioteca para construção da interface de usuário.
+- **Vite:** Ferramenta de build para desenvolvimento web moderno e rápido.
+- **TypeScript:** Superset do JavaScript que adiciona tipagem estática.
+- **Tailwind CSS:** Framework CSS para estilização rápida e customizável.
+- **React Router:** Para gerenciamento de rotas na aplicação.
+- **Axios:** Cliente HTTP para realizar requisições à API.
+- **Zod:** Para validação de esquemas e tipos.
+- **Lucide React:** Biblioteca de ícones.
+
+## 🏁 Como Executar o Projeto
+
+Para executar o projeto localmente, siga os passos abaixo:
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/seu-usuario/grupo-02-turma-java-82.git](https://github.com/seu-usuario/grupo-02-turma-java-82.git)
+    ```
+2.  **Acesse o diretório do projeto:**
+    ```bash
+    cd grupo-02-turma-java-82/healthsync_page/HealthSync_Page-main
+    ```
+3.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+4.  **Execute a aplicação:**
+    ```bash
+    npm run dev
+    ```
+
+A aplicação estará disponível em `http://localhost:5173`.
+
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
