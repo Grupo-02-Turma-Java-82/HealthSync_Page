@@ -14,14 +14,14 @@ export function Navbar() {
         <img
           src="https://ik.imagekit.io/brunogodoy/LogoSync.png?updatedAt=1752036904552"
           alt="Imagem de um tigre laranja olhando sério"
-          className="w-14 h-12"
+          className="w-14 h-12 hidden md:inline-flex"
         />
-        <h1 className="font-heading font-bold text-xl text-foreground">
+        <h1 className="font-heading font-bold text-base text-foreground md:text-2xl">
           HealthSync
         </h1>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex md:gap-4">
         <Button
           variant="ghost"
           size="icon"

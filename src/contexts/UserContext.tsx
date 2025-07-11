@@ -13,7 +13,7 @@ type UsersContextData = {
 
 export const UsersContext = createContext({} as UsersContextData);
 
-export function UsersProvider({ children }: { children: ReactNode }) {
+export function UserProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
 

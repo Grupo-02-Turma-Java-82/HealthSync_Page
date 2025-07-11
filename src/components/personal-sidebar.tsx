@@ -20,26 +20,27 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "./ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const items = [
   {
     title: "Dashboard",
-    url: "/personal-dashboard",
+    url: "/",
     icon: LayoutDashboard,
   },
   {
     title: "Meus Alunos",
-    url: "/personal-alunos",
+    url: "/alunos",
     icon: UsersIcon,
   },
   {
     title: "Biblioteca de Exercicios",
-    url: "/personal-exercicios",
+    url: "/exercicios",
     icon: BookOpen,
   },
   {
     title: "Montar Exercício",
-    url: "/personal-novo-exercicio",
+    url: "/novo-exercicio",
     icon: DumbbellIcon,
   },
   {
@@ -50,6 +51,8 @@ const items = [
 ];
 
 export function PersonalSidebar() {
+  const { remove } = useAuth();
+
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -88,7 +91,11 @@ export function PersonalSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t-[1px] py-4">
-        <Button className="w-full justify-start gap-4" variant="ghost">
+        <Button
+          className="w-full justify-start gap-4"
+          variant="ghost"
+          onClick={() => remove()}
+        >
           <LogOutIcon size={24} />
           <p className="text-base">Sair</p>
         </Button>
