@@ -3,13 +3,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/services/api";
 import { AxiosError } from "axios";
 import type { Exercises, CreateExercisePayload } from "@/models/Exercises";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 
 type ExerciseContextData = {
   isLoading: boolean;
   exercises: Exercises[];
-  create: (data: CreateExercisePayload) => Promise<void>; 
-  // update: (data: Exercises) => Promise<void>;
+  create: (data: CreateExercisePayload) => Promise<void>;
+  update: (data: Exercises) => Promise<void>;
+  delete: (id: number) => Promise<void>;
 };
 
 export const ExerciseContext = createContext({} as ExerciseContextData);
@@ -25,11 +26,11 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.get("/exercicios");
       setExercises(response.data);
-      console.log("Exercicios carregados:", response.data);
+      console.log("Exercícios carregados:", response.data);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
-        console.error("API Error: ", e.response?.data.message);
+        console.error("Erro da API: ", e.response?.data.message);
       }
     } finally {
       setIsLoading(false);
@@ -41,14 +42,14 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.post<Exercises>("/exercicios", {
         ...exerciseData,
-        dataCriacao: formatDate(new Date(), "yyyy-MM-dd"),
+        dataCriacao: format(new Date(), "yyyy-MM-dd"),
       });
       setExercises((prevExercises) => [...prevExercises, response.data]);
       alert("Exercício cadastrado com sucesso!");
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
-        console.error("API Error: ", e.response?.data.message);
+        console.error("Erro da API: ", e.response?.data.message);
         alert(
           e.response?.data.message || "Não foi possível cadastrar o exercício."
         );
@@ -58,26 +59,45 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // async function update(data: User) { // Comentado, pois não é o foco atual
-  //   try {
-  //     setIsLoading(true);
+  async function update(data: Exercises) {
+    try {
+      setIsLoading(true);
+      await api.put(`/exercicios`, data);
 
-  //     await api.put(`/usuarios/atualizar`, data);
+      fetchExercises();
+    } catch (e) {
+      console.error(e);
+      if (e instanceof AxiosError) {
+        console.error("Erro da API: ", e.response?.data.message);
+        alert(
+          e.response?.data.message || "Não foi possível atualizar o exercício."
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-  //     alert("Aluno atualizado com sucesso!");
-  //     fetchExercises();
-  //   } catch (e) {
-  //     console.error(e);
-  //     if (e instanceof AxiosError) {
-  //       console.error("API Error: ", e.response?.data.message);
-  //       alert(
-  //         e.response?.data.message || "Não foi possível atualizar o aluno."
-  //       );
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }
+  async function deleteExercise(id: number) {
+    try {
+      setIsLoading(true);
+      await api.delete(`/exercicios/${id}`);
+      alert("Exercício excluído com sucesso!");
+      setExercises((prevExercises) =>
+        prevExercises.filter((ex) => ex.id !== id)
+      );
+    } catch (e) {
+      console.error(e);
+      if (e instanceof AxiosError) {
+        console.error("Erro da API: ", e.response?.data.message);
+        alert(
+          e.response?.data.message || "Não foi possível excluir o exercício."
+        );
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (session?.token) {
@@ -91,6 +111,8 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
         isLoading,
         exercises,
         create,
+        update,
+        delete: deleteExercise,
       }}
     >
       {children}

@@ -30,7 +30,7 @@ export function Students() {
       ) : (
         <>
           {isForm ? (
-            <FormStudents isEditMode={isForm} />
+            <FormStudents isEditMode={false} />
           ) : (
             <StudentsDatatable students={users} />
           )}

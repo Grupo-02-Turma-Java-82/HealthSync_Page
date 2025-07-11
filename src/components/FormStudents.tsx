@@ -24,7 +24,7 @@ const formSchema = z.object({
     .string()
     .min(6, { message: "A senha deve ter no mínimo 6 caracteres." })
     .optional()
-    .or(z.literal("")),
+    .or(z.literal("")), // Senha opcional para edição, mas obrigatória para cadastro
   dataNascimento: z.string().refine((date) => !isNaN(Date.parse(date)), {
     message: "Data de nascimento inválida.",
   }),
@@ -117,22 +117,23 @@ export function FormStudents({
         ...initialData,
         ...commonFormData,
         id: initialData.id,
-        senha: values.senha || initialData.senha, // Garante que a senha é uma string
+        senha: values.senha || initialData.senha,
       };
 
-      // REMOVIDA A LINHA PROBLEMÁTICA: delete dataToUpdate.senha;
-      // Se a API espera que a senha seja omitida quando não alterada,
-      // você precisaria ajustar o tipo 'User' para 'senha?: string;'
-      // ou a assinatura da função 'update' no contexto para 'Partial<User>'.
-      // No entanto, para a tipagem atual, a senha deve ser sempre uma string.
-
-      await update(dataToUpdate);
-      console.log("Updating user:", dataToUpdate);
+      try {
+        await update(dataToUpdate);
+        alert("Aluno atualizado com sucesso!");
+        if (onClose) onClose();
+      } catch (error) {
+        console.error("Erro ao atualizar aluno:", error);
+        alert("Não foi possível atualizar o aluno.");
+      }
     } else {
       if (!values.senha) {
         console.error(
           "Erro: Senha é obrigatória para o cadastro de um novo usuário."
         );
+        form.setError("senha", { message: "Senha é obrigatória." });
         return;
       }
 
@@ -145,12 +146,17 @@ export function FormStudents({
         tipoUsuario: commonFormData.tipoUsuario,
       };
 
-      await create(dataToCreate);
-      console.log("Adding user:", dataToCreate);
+      console.log("Dados do novo aluno para envio:", dataToCreate);
+      try {
+        await create(dataToCreate);
+        alert("Aluno cadastrado com sucesso!");
+        form.reset();
+        if (onClose) onClose();
+      } catch (error) {
+        console.error("Erro ao cadastrar aluno:", error);
+        alert("Não foi possível cadastrar o aluno.");
+      }
     }
-
-    if (onClose) onClose();
-    form.reset();
   }
 
   return (
@@ -282,7 +288,7 @@ export function FormStudents({
           <FormInput
             control={form.control}
             name="senha"
-            label="Senha *"
+            label="Senha do aluno *"
             type="password"
             placeholder="Digite a senha..."
           />

@@ -23,6 +23,13 @@ export function PersonalDashboardRoutes() {
       <Route path="/novo-exercicio" element={<PersonalLayout />}>
         <Route index element={<NewExercise />} />
       </Route>
+
+      <Route
+        path="/exercicios/editar-exercicio/:id"
+        element={<PersonalLayout />}
+      >
+        <Route index element={<NewExercise />} />
+      </Route>
     </Routes>
   );
 }

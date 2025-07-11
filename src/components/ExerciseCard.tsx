@@ -8,7 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Youtube } from "lucide-react";
+import { Edit, Trash, Youtube } from "lucide-react";
+import { useExercises } from "@/hooks/useExercises";
+import { useNavigate } from "react-router";
 
 interface ExerciseCardProps {
   exercicio: Exercises;
@@ -30,6 +32,10 @@ const getDifficultyVariant = (
 };
 
 export function ExerciseCard({ exercicio }: ExerciseCardProps) {
+  const { delete: deleteExercise } = useExercises();
+
+  const navigate = useNavigate();
+
   return (
     <Card className="flex flex-col h-full hover:scale-105 transition ease-in-out">
       <CardHeader>
@@ -64,9 +70,29 @@ export function ExerciseCard({ exercicio }: ExerciseCardProps) {
           </Badge>
           <Badge variant="outline">{exercicio.equipamento_necessario}</Badge>
         </div>
-        <div className="text-xs text-muted-foreground mt-2 sm:mt-0">
-          Criado em:{" "}
-          {new Date(exercicio.dataCriacao).toLocaleDateString("pt-BR")}
+
+        <div className="flex w-full justify-between">
+          <div className="text-xs text-muted-foreground mt-2">
+            Criado em:{" "}
+            {new Date(exercicio.dataCriacao).toLocaleDateString("pt-BR")}
+          </div>
+
+          <div className="flex gap-2 mt-2">
+            <Edit
+              size={20}
+              className="hover:opacity-70 transition ease-in-out cursor-pointer"
+              onClick={() => navigate(`editar-exercicio/${exercicio.id}`)}
+            />
+            <Trash
+              size={20}
+              className="hover:text-red-700 transition ease-in-out cursor-pointer"
+              onClick={() => {
+                if (window.confirm("Deseja realmente apagar o exercicio?")) {
+                  deleteExercise(exercicio.id);
+                }
+              }}
+            />
+          </div>
         </div>
       </CardFooter>
     </Card>

@@ -21,14 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader } from "lucide-react";
+import { useNavigate } from "react-router";
 
+import type { Exercises, CreateExercisePayload } from "@/models/Exercises";
 import type { Categories } from "@/models/Categories";
 import { useExercises } from "@/hooks/useExercises";
 import { api } from "@/services/api";
 import { AxiosError } from "axios";
-import type { CreateExercisePayload } from "@/models/Exercises";
-import { Loader } from "lucide-react";
-import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   nome: z
@@ -55,19 +55,23 @@ const formSchema = z.object({
 });
 
 type FormExercisesProps = {
-  // isEditMode?: boolean;
-  // initialData?: Exercises | null;
-  // onSubmitSuccess?: () => void;
+  isEditMode: boolean;
+  initialData?: Exercises | null;
+  onClose?: () => void;
 };
 
-export function FormExercises({}: FormExercisesProps) {
-  const { create, isLoading } = useExercises();
-
-  const navigate = useNavigate();
+export function FormExercises({
+  isEditMode,
+  initialData,
+  onClose,
+}: FormExercisesProps) {
+  const { create, update, isLoading } = useExercises();
 
   const [categories, setCategories] = useState<Categories[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -108,6 +112,28 @@ export function FormExercises({}: FormExercisesProps) {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (isEditMode && initialData) {
+      form.reset({
+        nome: initialData.nome,
+        categoriaId: initialData.categoria.id,
+        descricao_detalhada: initialData.descricao_detalhada,
+        nivel_dificuldade: initialData.nivel_dificuldade,
+        url_video_demonstrativo: initialData.url_video_demonstrativo,
+        equipamento_necessario: initialData.equipamento_necessario,
+      });
+    } else if (!isEditMode) {
+      form.reset({
+        nome: "",
+        categoriaId: undefined,
+        descricao_detalhada: "",
+        nivel_dificuldade: "INICIANTE",
+        url_video_demonstrativo: "",
+        equipamento_necessario: "",
+      });
+    }
+  }, [isEditMode, initialData, form]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const selectedCategory = categories.find(
       (cat) => cat.id === values.categoriaId
@@ -122,7 +148,7 @@ export function FormExercises({}: FormExercisesProps) {
       return;
     }
 
-    const newExerciseData: CreateExercisePayload = {
+    const commonExerciseData = {
       nome: values.nome,
       categoria: selectedCategory,
       descricao_detalhada: values.descricao_detalhada ?? "",
@@ -131,17 +157,44 @@ export function FormExercises({}: FormExercisesProps) {
       equipamento_necessario: values.equipamento_necessario ?? "",
     };
 
-    if (!newExerciseData.categoria) {
-      console.error("Categoria selecionada inválida.");
-      form.setError("categoriaId", {
-        type: "manual",
-        message: "Selecione uma categoria válida.",
-      });
-      return;
-    }
+    if (isEditMode) {
+      if (!initialData?.id) {
+        console.error("Erro: ID do exercício não encontrado para atualização.");
+        return;
+      }
+      const dataToUpdate: Exercises = {
+        ...initialData,
+        ...commonExerciseData,
+        id: initialData.id,
+        dataCriacao: initialData.dataCriacao,
+      };
 
-    create(newExerciseData);
-    navigate("/exercicios");
+      console.log("Dados do exercício para atualização:", dataToUpdate);
+      try {
+        await update(dataToUpdate);
+        alert("Exercício atualizado com sucesso!");
+        if (onClose) onClose();
+        navigate("/exercicios");
+      } catch (error) {
+        console.error("Erro ao atualizar exercício:", error);
+        alert("Não foi possível atualizar o exercício.");
+      }
+    } else {
+      const dataToCreate: CreateExercisePayload = {
+        ...commonExerciseData,
+      };
+
+      console.log("Dados do novo exercício para envio:", dataToCreate);
+      try {
+        await create(dataToCreate);
+        form.reset();
+        if (onClose) onClose();
+        navigate("/exercicios");
+      } catch (error) {
+        console.error("Erro ao cadastrar exercício:", error);
+        alert("Não foi possível cadastrar o exercício.");
+      }
+    }
   }
 
   return (
@@ -160,50 +213,53 @@ export function FormExercises({}: FormExercisesProps) {
         <FormField
           control={form.control}
           name="categoriaId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Categoria *</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(parseInt(value))}
-                value={field.value?.toString()}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a categoria" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {isCategoriesLoading ? (
-                    <SelectItem value="loading-placeholder" disabled>
-                      Carregando categorias...
-                    </SelectItem>
-                  ) : categoriesError ? (
-                    <SelectItem
-                      value="error-placeholder"
-                      disabled
-                      className="text-red-500"
-                    >
-                      {categoriesError}
-                    </SelectItem>
-                  ) : categories.length === 0 ? (
-                    <SelectItem value="no-categories-placeholder" disabled>
-                      Nenhuma categoria encontrada.
-                    </SelectItem>
-                  ) : (
-                    categories.map((categoria) => (
-                      <SelectItem
-                        key={categoria.id}
-                        value={categoria.id.toString()}
-                      >
-                        {categoria.nome}
+          render={({ field }) => {
+            console.log("CategoriaId field.value:", field.value);
+            return (
+              <FormItem>
+                <FormLabel>Categoria *</FormLabel>
+                <Select
+                  onValueChange={(value) => field.onChange(parseInt(value))}
+                  value={field.value?.toString()}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione a categoria" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {isCategoriesLoading ? (
+                      <SelectItem value="loading-placeholder" disabled>
+                        Carregando categorias...
                       </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
+                    ) : categoriesError ? (
+                      <SelectItem
+                        value="error-placeholder"
+                        disabled
+                        className="text-red-500"
+                      >
+                        {categoriesError}
+                      </SelectItem>
+                    ) : categories.length === 0 ? (
+                      <SelectItem value="no-categories-placeholder" disabled>
+                        Nenhuma categoria encontrada.
+                      </SelectItem>
+                    ) : (
+                      categories.map((categoria) => (
+                        <SelectItem
+                          key={categoria.id}
+                          value={categoria.id.toString()}
+                        >
+                          {categoria.nome}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
 
         <FormField
@@ -279,6 +335,8 @@ export function FormExercises({}: FormExercisesProps) {
         <Button disabled={isLoading} type="submit" className="w-full">
           {isLoading ? (
             <Loader size={26} className="animate-spin" />
+          ) : isEditMode ? (
+            "Atualizar Exercício"
           ) : (
             "Cadastrar Exercício"
           )}

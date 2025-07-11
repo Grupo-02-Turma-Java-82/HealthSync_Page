@@ -34,7 +34,7 @@ export function Exercises() {
       ) : (
         <>
           {isForm ? (
-            <FormExercises />
+            <FormExercises isEditMode={false} initialData={null} />
           ) : (
             <ExerciseList exercises={allExercises} />
           )}

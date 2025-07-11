@@ -50,7 +50,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.post<User>("/usuarios/cadastrar", userData);
       setUsers((prevUsers) => [...prevUsers, response.data]);
-      alert("Usuário cadastrado com sucesso!");
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
