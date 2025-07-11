@@ -11,7 +11,7 @@ import { ptBR } from "date-fns/locale";
 
 export default function UserDashboard() {
   const { users, isLoading } = useContext(UsersContext);
-  const user = users[2]; // Simula o usuário logado
+  const user = users[1]; // Simula o usuário logado
 
   const summaryMock: WeeklySummary = {
     weeklyGoal: 5,

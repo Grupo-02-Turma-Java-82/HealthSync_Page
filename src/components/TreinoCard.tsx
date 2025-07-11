@@ -46,7 +46,7 @@ export default function TreinoCard({
       {/* Conteúdo: exercícios */}
       <div className="px-6 space-y-3 mb-6">
         {exercicios.map((ex, i) => (
-          <ExercisesCard key={ex.id} index={i} treino={ex} />
+          <ExercisesCard key={ex.id} treino={ex} />
         ))}
       </div>
     </section>
