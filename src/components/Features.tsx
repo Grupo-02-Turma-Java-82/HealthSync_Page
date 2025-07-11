@@ -1,89 +1,160 @@
-
 // Importe os ícones que você vai usar
-import { Dumbbell, Users, BookOpen, Smartphone, TrendingUp, UserCheck } from 'lucide-react';
+import {
+  Dumbbell,
+  Users,
+  BookOpen,
+  Smartphone,
+  TrendingUp,
+  UserCheck,
+} from "lucide-react";
 
 import Feature from './Feature';
 
 export function Features() {
   const trainerFeatures = [
     {
-      title: 'Gestão de Alunos',
-      description: 'Gerencie todos os seus alunos em um só lugar de forma intuitiva',
+      title: "Gestão de Alunos",
+      description:
+        "Gerencie todos os seus alunos em um só lugar, com perfis detalhados e acompanhamento personalizado.",
       icon: <Users className="w-6 h-6 text-primary" />,
     },
     {
-      title: 'Criação de Treinos Ilimitados',
-      description: 'Crie treinos personalizados sem limitações',
-      icon: <BookOpen className="w-6 h-6 text-primary" />,
+      title: "Criação de Treinos Ilimitados",
+      description:
+        "Crie treinos personalizados sem limites, adaptados às necessidades específicas de cada aluno.",
+      icon: <Dumbbell className="w-6 h-6 text-primary" />,
     },
     {
-      title: 'Biblioteca de Exercícios',
-      description: 'Acesso completo à nossa biblioteca de exercícios com vídeos',
-      icon: <Dumbbell className="w-6 h-6 text-primary" />,
+      title: "Biblioteca de Exercícios",
+      description:
+        "Organize sua biblioteca pessoal de exercícios com descrições, vídeos e categorias customizadas.",
+      icon: <BookOpen className="w-6 h-6 text-primary" />,
     },
   ];
 
   const studentFeatures = [
     {
-      title: 'Acesso Fácil aos Treinos',
-      description: 'Acesse seus treinos de qualquer lugar, a qualquer hora',
+      title: "Acesso Fácil aos Treinos",
+      description:
+        "Acesse seus treinos a qualquer hora, em qualquer lugar, com interface intuitiva e responsiva.",
       icon: <Smartphone className="w-6 h-6 text-primary" />,
     },
     {
-      title: 'Acompanhamento de Progresso',
-      description: 'Visualize sua evolução com gráficos e estatísticas',
+      title: "Acompanhamento de Progresso",
+      description:
+        "Visualize sua evolução com gráficos detalhados e histórico completo de treinos realizados.",
       icon: <TrendingUp className="w-6 h-6 text-primary" />,
     },
     {
-      title: 'Interface Intuitiva',
-      description: 'Design simples e fácil de usar para todos os níveis',
+      title: "Interface Intuitiva",
+      description:
+        "Navegue facilmente pela plataforma com design moderno e experiência otimizada para resultados.",
       icon: <UserCheck className="w-6 h-6 text-primary" />,
     },
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-heading font-bold text-foreground mb-4">
+    <section id="features" className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
             Funcionalidades Poderosas
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Tudo que você precisa para transformar seus treinos e alcançar seus objetivos
+          <p className="mt-4 text-xl text-muted-foreground">
+            Tudo que você precisa para transformar sua jornada fitness
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Seção para Personal Trainers */}
-          <div>
-            <h3 className="text-2xl font-heading font-bold text-primary mb-8 text-center">
-              Para Personal Trainers
-            </h3>
-            <div className="space-y-6">
+        <div className="mt-20">
+          {/* Personal Trainers */}
+          <div className="mb-16">
+            <div className="text-center mb-12">
+              <h3 className="text-2xl font-bold text-foreground mb-4">
+                Para Personal Trainers
+              </h3>
+              <p className="text-lg text-muted-foreground">
+                Ferramentas profissionais para gerenciar e expandir seu negócio
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {trainerFeatures.map((feature, index) => (
-                <Feature
-                  key={index} // Use uma chave única se a ordem dos itens puder mudar
-                  title={feature.title}
-                  description={feature.description}
-                  icon={feature.icon}
-                />
+                <div
+                  key={index}
+                  data-slot="card"
+                  className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border hover:shadow-lg transition-shadow duration-300"
+                >
+                  <div
+                    data-slot="card-header"
+                    className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 [.border-b]:pb-6"
+                  >
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      {feature.icon}
+                    </div>
+                    <div
+                      data-slot="card-title"
+                      className="text-xl font-semibold text-foreground"
+                    >
+                      {feature.title}
+                    </div>
+                  </div>
+
+                  <div data-slot="card-content" className="px-6">
+                    <div
+                      data-slot="card-description"
+                      className="text-sm text-muted-foreground"
+                    >
+                      {feature.description}
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Seção para Alunos */}
+          {/* Alunos */}
           <div>
-            <h3 className="text-2xl font-heading font-bold text-primary mb-8 text-center">
-              Para Alunos
-            </h3>
-            <div className="space-y-6">
+            <div className="text-center mb-12">
+              <h3 className="text-2xl font-bold text-foreground mb-4">
+                Para Alunos
+              </h3>
+              <p className="text-lg text-muted-foreground">
+                Experiência simplificada para focar no que realmente importa:
+                seus resultados
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {studentFeatures.map((feature, index) => (
-                <Feature
+                <div
                   key={index}
-                  title={feature.title}
-                  description={feature.description}
-                  icon={feature.icon}
-                />
+                  data-slot="card"
+                  className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border hover:shadow-lg transition-shadow duration-300"
+                >
+                  <div
+                    data-slot="card-header"
+                    className="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 [.border-b]:pb-6"
+                  >
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      {feature.icon}
+                    </div>
+                    <div
+                      data-slot="card-title"
+                      className="text-xl font-semibold text-foreground"
+                    >
+                      {feature.title}
+                    </div>
+                  </div>
+
+                  <div data-slot="card-content" className="px-6">
+                    <div
+                      data-slot="card-description"
+                      className="text-sm text-muted-foreground"
+                    >
+                      {feature.description}
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>

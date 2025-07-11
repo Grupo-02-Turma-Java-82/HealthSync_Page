@@ -1,5 +1,3 @@
-
-
 import { Check, Crown, Heart, Users } from 'lucide-react';
 
 // types.ts ou no mesmo arquivo do componente
@@ -42,7 +40,7 @@ export function Plan({
   buttonHoverColorClass,
   ringColorClass = '', // Default vazio para não aplicar sempre
 }: PlanProps) {
-  const cardClasses = `rounded-lg bg-card text-card-foreground shadow-sm relative card-gradient shadow-card hover-lift transition-smooth border-0 ${ringColorClass ? `ring-2 ${ringColorClass} ring-offset-2` : ''}`;
+  const cardClasses = `rounded-lg bg-card text-card-foreground shadow-sm relative card-gradient shadow-card hover-lift transition-smooth border-0`;
   const buttonClasses = `inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 ${buttonColorClass} text-primary-foreground ${buttonHoverColorClass} h-11 rounded-md px-8 w-full font-heading font-semibold hero-gradient shadow-button hover-lift`;
 
   return (
