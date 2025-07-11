@@ -1,7 +1,7 @@
 export function Footer() {
   return (
 
-    <footer className="bg-muted-foreground text-white py-16">
+    <footer className="bg-muted-foreground-health-sync text-white py-16">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="md:col-span-2">

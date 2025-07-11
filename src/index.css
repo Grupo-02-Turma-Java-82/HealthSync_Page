@@ -51,6 +51,7 @@
 :root {
   --radius: 0.625rem;
   --background: #e5ede7; /* mint-cream */
+  --background-white: #fff;
   --foreground: #030301; /* black */
   --card: #ffffff;
   --card-foreground: #030301;
@@ -62,6 +63,7 @@
   --secondary-foreground: #030301;
   --muted: #d3d8d0;
   --muted-foreground: #351504; /* black-bean */
+  --muted-foreground-footer: #351504; /* black-bean */
   --accent: #ef5b02;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
@@ -85,6 +87,7 @@
 
 .dark {
   --background: #030301;
+  --background-white: #030301;
   --foreground: #e5ede7;
   --card: #351504;
   --card-foreground: #e5ede7;
@@ -96,6 +99,7 @@
   --secondary-foreground: #e5ede7;
   --muted: #452a1a; /* UPDATED */
   --muted-foreground: #d3d8d0;
+  --muted-foreground-footer: #000000; /* black-bean */
   --accent: #ef5b02;
   --accent-foreground: #ffffff;
   --destructive: oklch(0.704 0.191 22.216);
@@ -115,6 +119,14 @@
   --sidebar-accent-foreground: #e5ede7;
   --sidebar-border: #351504;
   --sidebar-ring: #ef5b02;
+}
+
+.bg-white-healthsync {
+  background-color: var(--background-white);
+}
+
+.bg-muted-foreground-health-sync {
+  background-color: var(--muted-foreground-footer);
 }
 
 @layer base {
