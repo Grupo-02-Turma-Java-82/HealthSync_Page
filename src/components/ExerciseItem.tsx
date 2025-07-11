@@ -2,6 +2,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import type { Exercises } from "@/models/Exercises";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router";
 
 type Props = {
   exercises: Exercises;
@@ -9,6 +10,8 @@ type Props = {
 
 export function ExerciseItem({ exercises }: Props) {
   const createdAt = new Date(exercises.dataCriacao);
+
+  const navigate = useNavigate();
 
   const distanceToNow = formatDistanceToNow(createdAt, {
     addSuffix: true,
@@ -22,7 +25,12 @@ export function ExerciseItem({ exercises }: Props) {
         <p className="text-sm text-muted-foreground">Criado {distanceToNow}</p>
       </div>
 
-      <Button variant="ghost">Editar</Button>
+      <Button
+        variant="ghost"
+        onClick={() => navigate(`/exercicios/editar-exercicio/${exercises.id}`)}
+      >
+        Editar
+      </Button>
     </div>
   );
 }

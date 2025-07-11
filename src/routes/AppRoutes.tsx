@@ -17,7 +17,6 @@ export function AppRoutes() {
 
      <Route path="/usuario-dashboard" element={<UserLayout/>}>
         <Route index element={<UserDashboard />} />
-        
       </Route>
 
     </Routes>

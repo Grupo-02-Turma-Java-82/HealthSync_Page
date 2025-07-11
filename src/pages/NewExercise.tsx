@@ -1,5 +1,3 @@
-// src/pages/NewExercise.tsx
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router"; // Importar useParams
 import { FormExercises } from "@/components/FormExercises";

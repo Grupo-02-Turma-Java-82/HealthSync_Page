@@ -60,7 +60,7 @@ export function Login() {
   }
 
   return (
-    <div className="flex flex-col gap-4 justify-center items-center text-center">
+    <div className="flex flex-col gap-4 justify-center items-center text-center my-20">
       <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
         Entre na sua conta
       </h1>
@@ -130,10 +130,7 @@ export function Login() {
         </p>
       </Card>
       <span className="hover:text-primary transition-colors my-6">
-        <NavLink
-          className="flex justify-center items-center gap-2"
-          to={"/home"}
-        >
+        <NavLink className="flex justify-center items-center gap-2" to={"/"}>
           <ArrowLeft size={20} />
           <p>Voltar para o início</p>
         </NavLink>

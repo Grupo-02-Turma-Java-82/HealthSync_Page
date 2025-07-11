@@ -69,7 +69,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       await api.put(`/usuarios/atualizar`, data);
 
-      alert("Aluno atualizado com sucesso!");
       fetchUser();
     } catch (e) {
       console.error(e);
