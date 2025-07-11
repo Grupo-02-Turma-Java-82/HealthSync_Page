@@ -1,5 +1,3 @@
-import { useContext } from "react";
-import { UsersContext } from "@/contexts/UserContext";
 import WeeklySummaryCard from "@/components/WeeklySummaryCard";
 import RecentWorkoutsList from "@/components/RecentWorkoutsList";
 import TreinoCard from "@/components/TreinoCard";
@@ -8,9 +6,10 @@ import type { WeeklySummary } from "@/models/WeeklySummary";
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useUsers } from "@/hooks/useUsers";
 
 export default function UserDashboard() {
-  const { users, isLoading } = useContext(UsersContext);
+  const { users, isLoading } = useUsers();
   const user = users[1]; // Simula o usuário logado
 
   const summaryMock: WeeklySummary = {
@@ -33,7 +32,7 @@ export default function UserDashboard() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Meu Treino</h1>
           <p className="text-muted-foreground">
-            Olá, {user.nome}! Pronta para mais um treino incrível? 💪
+            Olá, {users.nome}! Pronta para mais um treino incrível? 💪
           </p>
         </div>
         <div className="text-right">
