@@ -5,7 +5,7 @@ import { AppSidebar } from "./app-sidebar";
 import { useUsers } from "@/hooks/useUsers";
 
 export function UserLayout() {
-  const { users } = useUsers();
+  // const { users } = useUsers();
 
   return (
     <main className="w-full md:w-auto">
