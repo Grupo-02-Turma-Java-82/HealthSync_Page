@@ -16,7 +16,7 @@ export function PersonalLayout() {
           <NavbarDashboard
             nameUser={users[0]?.nomeCompleto}
             typeUser={users[0]?.tipoUsuario}
-            photo="https://ik.imagekit.io/brunogodoy/default-image.jpg?updatedAt=1747847809671"
+            photo="https://ik.imagekit.io/brunogodoy/testepersonal.jpeg?updatedAt=1752258464257"
           />
           <Outlet />
         </main>

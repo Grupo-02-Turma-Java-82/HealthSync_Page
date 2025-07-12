@@ -19,7 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   // {
@@ -87,7 +87,7 @@ export function AppSidebar() {
             </h1>
             <div className="flex gap-2">
               <img
-                src="https://ik.imagekit.io/brunogodoy/download.jpeg?updatedAt=1752187125543"
+                src="https://ik.imagekit.io/brunogodoy/testepersonal.jpeg?updatedAt=1752258464257"
                 alt="Imagem do Personal" // Removida interpolação desnecessária
                 className="relative flex size-8 shrink-0 overflow-hidden rounded-full h-8 w-8"
               />
@@ -99,7 +99,7 @@ export function AppSidebar() {
                   </p>
                 ) : personalTrainer ? (
                   <h1 className="text-sm font-medium text-foreground">
-                    {personalTrainer.nomeCompleto}
+                    Roberto souza
                   </h1>
                 ) : (
                   <h1 className="text-sm font-medium text-foreground">

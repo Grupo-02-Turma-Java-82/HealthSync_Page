@@ -44,8 +44,6 @@ export function Login() {
       const response = await api.post("/usuarios/logar", data);
 
       auth.save(response.data);
-
-
       navigate("/dashboard");
     } catch (e) {
       if (e instanceof AxiosError && e.response) {
