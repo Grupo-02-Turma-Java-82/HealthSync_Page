@@ -56,7 +56,7 @@ export function CardRecentExercises({
           )}
 
           {(exercises ?? []).length > 4 && (
-            <div className="mt-4 flex justify-center">
+            <div className="mt-4 flex justify-center w-full">
               <Button
                 variant="ghost"
                 onClick={() => setIsExpanded(!isExpanded)}
