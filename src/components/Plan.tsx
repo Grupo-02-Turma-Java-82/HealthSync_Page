@@ -1,9 +1,16 @@
 import type { Plan } from "@/models/Plan";
 import { Check } from "lucide-react";
+import { Button } from "./ui/button";
 
 export function Plan({ plan }: { plan: Plan }) {
   const cardClasses = `rounded-lg bg-card text-card-foreground shadow-sm relative card-gradient shadow-card hover-lift transition-smooth border-0`;
-  const buttonClasses = `inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 ${plan.buttonColorClass} text-primary-foreground ${plan.buttonHoverColorClass} h-11 rounded-md px-8 w-full font-heading font-semibold hero-gradient shadow-button hover-lift`;
+  const buttonClasses = `inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 ${
+    plan.buttonColorClass
+  } text-primary-foreground ${
+    plan.buttonHoverColorClass
+  } h-11 rounded-md px-8 w-full font-heading font-semibold hero-gradient shadow-button hover-lift ${
+    plan.title === "Usuário Independente" && "cursor-not-allowed"
+  }`;
 
   return (
     <div className={cardClasses}>
@@ -44,7 +51,7 @@ export function Plan({ plan }: { plan: Plan }) {
           ))}
         </ul>
         <a className="block" href={plan.buttonLink}>
-          <button className={buttonClasses}>{plan.buttonText}</button>
+          <Button className={buttonClasses}>{plan.buttonText}</Button>
         </a>
       </div>
     </div>

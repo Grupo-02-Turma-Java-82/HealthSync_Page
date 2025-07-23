@@ -119,7 +119,7 @@ export function Login() {
         </Form>
 
         <p className="text-sm text-muted-foreground mt-6">
-          Não tem uma conta?{" "}
+          Não tem uma conta?
           <NavLink
             to={"/cadastro"}
             className="text-primary hover:underline font-semibold"

@@ -43,7 +43,7 @@ export function Plans() {
         { text: "Relatórios de evolução" },
       ],
       buttonText: "Em Breve...",
-      buttonLink: "/cadastro",
+      buttonLink: "#",
       isPopular: false,
       icon: <Heart />,
       iconBgColorClass: "bg-secondary",
