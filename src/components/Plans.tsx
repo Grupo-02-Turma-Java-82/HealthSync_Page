@@ -78,7 +78,7 @@ export function Plans() {
 
   return (
     <section
-      id="planos"
+      id="plans"
       className="py-20 bg-gradient-to-br from-mint-cream to-background"
     >
       <div className="container mx-auto px-4">
