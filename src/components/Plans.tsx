@@ -1,5 +1,5 @@
-import { Plan } from "./Plan"; // Importe o componente criado
-import { Crown, Heart, Users } from "lucide-react"; // Exemplo de importação de ícones
+import { Plan } from "./Plan";
+import { Crown, Heart, Users } from "lucide-react";
 
 export function Plans() {
   const plans = [
@@ -49,14 +49,14 @@ export function Plans() {
       iconBgColorClass: "bg-secondary",
       buttonColorClass: "bg-secondary",
       buttonHoverColorClass: "hover:bg-secondary/80",
-      ringColorClass: "", // Este plano não tem o anel de destaque
+      ringColorClass: "",
     },
     {
       id: "linked-user",
       title: "Usuário Vinculado",
       description: "Acesso sob orientação de um Personal Trainer",
       price: "Gratuito",
-      pricePer: "", // Não tem "por mês"
+      pricePer: "",
       details:
         "Aproveite todas as funcionalidades sob a supervisão do seu personal trainer.",
       features: [
@@ -69,7 +69,7 @@ export function Plans() {
       buttonLink: "/cadastro",
       isPopular: false,
       icon: <Users />,
-      iconBgColorClass: "bg-green-500", // Exemplo de cor customizada
+      iconBgColorClass: "bg-green-500",
       buttonColorClass: "bg-green-500",
       buttonHoverColorClass: "hover:bg-green-600",
       ringColorClass: "",

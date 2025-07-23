@@ -63,7 +63,6 @@ export function Features() {
         </div>
 
         <div className="mt-20">
-          {/* Personal Trainers */}
           <div className="mb-16">
             <div className="text-center mb-12">
               <h3 className="text-2xl font-bold text-foreground mb-4">
@@ -109,7 +108,6 @@ export function Features() {
             </div>
           </div>
 
-          {/* Alunos */}
           <div>
             <div className="text-center mb-12">
               <h3 className="text-2xl font-bold text-foreground mb-4">

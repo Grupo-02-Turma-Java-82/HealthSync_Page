@@ -11,8 +11,6 @@ export function Exercises() {
 
   const allExercises = exercises?.flatMap((exercise) => exercise) || [];
 
-  console.log(allExercises);
-
   return (
     <div className="flex flex-col p-6">
       <div className="flex justify-between items-center mb-6">

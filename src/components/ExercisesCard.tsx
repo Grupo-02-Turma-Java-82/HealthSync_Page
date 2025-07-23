@@ -15,29 +15,34 @@ export default function ExercisesCard({ treino }: ExercisesCardProps) {
 
   return (
     <section className="bg-card text-card-foreground rounded-xl border border-border shadow-sm p-6 space-y-6">
-      {/* Header */}
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
         <div className="flex-1">
           <h2 className="text-xl font-semibold">{treino.nome}</h2>
           <div className="text-muted-foreground mt-2 text-sm flex flex-wrap gap-2">
-            <span>Categoria: <span className="text-foreground">{treino.categoria.nome}</span></span>
+            <span>
+              Categoria:{" "}
+              <span className="text-foreground">{treino.categoria.nome}</span>
+            </span>
             <span>•</span>
             <span>Nível: {treino.nivel_dificuldade.toLowerCase()}</span>
           </div>
           {treino.equipamento_necessario && (
             <p className="text-sm text-muted-foreground mt-1">
-              Equipamento necessário: <span className="text-foreground">{treino.equipamento_necessario}</span>
+              Equipamento necessário:{" "}
+              <span className="text-foreground">
+                {treino.equipamento_necessario}
+              </span>
             </p>
           )}
         </div>
       </header>
 
-      {/* Descrição */}
       {treino.descricao_detalhada && (
-        <p className="text-sm text-muted-foreground">{treino.descricao_detalhada}</p>
+        <p className="text-sm text-muted-foreground">
+          {treino.descricao_detalhada}
+        </p>
       )}
 
-      {/* Link de vídeo */}
       {treino.url_video_demonstrativo && (
         <a
           href={treino.url_video_demonstrativo}
@@ -49,7 +54,6 @@ export default function ExercisesCard({ treino }: ExercisesCardProps) {
         </a>
       )}
 
-      {/* Ações */}
       <div className="flex flex-col sm:flex-row gap-3">
         <button
           onClick={iniciarTreino}

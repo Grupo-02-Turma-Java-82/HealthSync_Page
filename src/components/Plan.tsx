@@ -1,25 +1,22 @@
-// types.ts ou no mesmo arquivo do componente
 export interface PricingFeature {
   text: string;
-  // Você pode adicionar um ícone específico para a feature se quiser
-  // icon?: React.ReactNode;
 }
 
 export interface PlanProps {
   title: string;
   description: string;
   price: string;
-  pricePer?: string; // Ex: "/mês"
-  details: string; // Descrição longa
+  pricePer?: string;
+  details: string;
   features: PricingFeature[];
   buttonText: string;
   buttonLink: string;
-  isPopular?: boolean; // Para exibir o badge "Mais Popular"
-  icon: React.ReactNode; // O SVG do ícone
-  iconBgColorClass: string; // Classe Tailwind para a cor de fundo do ícone (ex: 'bg-primary')
-  buttonColorClass: string; // Classe Tailwind para a cor do botão (ex: 'bg-primary')
-  buttonHoverColorClass: string; // Classe Tailwind para o hover do botão (ex: 'hover:bg-primary/90')
-  ringColorClass?: string; // Classe Tailwind para o anel de destaque (ex: 'ring-primary')
+  isPopular?: boolean;
+  icon: React.ReactNode;
+  iconBgColorClass: string;
+  buttonColorClass: string;
+  buttonHoverColorClass: string;
+  ringColorClass?: string;
 }
 
 export function Plan({
@@ -71,7 +68,6 @@ export function Plan({
         <ul className="space-y-3">
           {features.map((feature, index) => (
             <li key={index} className="flex items-center gap-3">
-              {/* O ícone de check pode ser fixo ou vir das props da feature */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
