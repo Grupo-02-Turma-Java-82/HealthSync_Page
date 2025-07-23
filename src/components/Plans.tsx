@@ -42,7 +42,7 @@ export function Plans() {
         { text: "Biblioteca de exercícios" },
         { text: "Relatórios de evolução" },
       ],
-      buttonText: "Começar a Treinar",
+      buttonText: "Em Breve...",
       buttonLink: "/cadastro",
       isPopular: false,
       icon: <Heart />,
@@ -93,7 +93,7 @@ export function Plans() {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {plans.map((plan) => (
-            <Plan key={plan.id} {...plan} />
+            <Plan key={plan.id} plan={plan} />
           ))}
         </div>
       </div>
