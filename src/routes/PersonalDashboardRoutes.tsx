@@ -10,7 +10,7 @@ import { ExercisesProvider } from "@/contexts/ExerciseContext";
 export function PersonalDashboardRoutes() {
   return (
     <Routes>
-      <Route path="/dashboard" element={<PersonalLayout />}>
+      <Route path="/" element={<PersonalLayout />}>
         <Route
           index
           element={

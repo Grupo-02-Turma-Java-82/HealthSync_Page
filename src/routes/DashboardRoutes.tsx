@@ -8,7 +8,7 @@ import { Routes, Route } from "react-router";
 export function UserRoutes() {
   return (
     <Routes>
-      <Route path="/dashboard" element={<UserLayout />}>
+      <Route path="/" element={<UserLayout />}>
         <Route
           index
           element={

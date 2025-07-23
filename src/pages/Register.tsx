@@ -28,6 +28,7 @@ export function Register() {
             to={"/login"}
             className="text-primary hover:underline font-semibold"
           >
+            {" "}
             Entrar
           </NavLink>
         </p>

@@ -44,7 +44,7 @@ export function Login() {
       const response = await api.post("/usuarios/logar", data);
 
       auth.save(response.data);
-      navigate("/dashboard");
+      navigate("/");
     } catch (e) {
       if (e instanceof AxiosError && e.response) {
         setErrorMessage(
@@ -124,6 +124,7 @@ export function Login() {
             to={"/cadastro"}
             className="text-primary hover:underline font-semibold"
           >
+            {" "}
             Cadastre-se
           </NavLink>
         </p>
