@@ -1,11 +1,16 @@
-import type { UserAPIResponse } from "@/models/Users";
-import { api } from "@/services/api";
 import { createContext, useEffect, useState, type ReactNode } from "react";
+
+import type { UserAPIResponse } from "@/models/Users";
+
+import { api } from "@/services/api";
 
 type AuthContext = {
   isLoading: boolean;
+
   session: null | UserAPIResponse;
+
   save: (data: UserAPIResponse) => void;
+
   remove: () => void;
 };
 
@@ -15,33 +20,34 @@ export const AuthContext = createContext({} as AuthContext);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<null | UserAPIResponse>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   function save(data: UserAPIResponse) {
     const { token, ...user } = data;
 
     localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(user));
 
-    localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, data.token);
+    localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, token);
 
-    api.defaults.headers.common["Authorization"] = `${data.token}`;
+    api.defaults.headers.common["Authorization"] = `${token}`;
 
     setSession(data);
+
+    loadUser();
   }
 
   function remove() {
     setSession(null);
 
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
-    localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
 
-    window.location.assign("/");
+    localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
   }
 
   function loadUser() {
-    setIsLoading(true);
-
     const user = localStorage.getItem(`${LOCAL_STORAGE_KEY}:user`);
+
     const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`);
 
     if (token && user) {

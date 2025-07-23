@@ -2,12 +2,15 @@ import { Outlet } from "react-router";
 import { NavbarDashboard } from "./NavbarDashboard";
 import { SidebarProvider } from "./ui/sidebar";
 import { AppSidebar } from "./app-sidebar";
+import { UserProvider } from "@/contexts/UserContext";
 
 export function UserLayout() {
   return (
     <main className="w-full md:w-auto">
       <SidebarProvider>
-        <AppSidebar />
+        <UserProvider>
+          <AppSidebar />
+        </UserProvider>
 
         <main className="w-screen h-full">
           <NavbarDashboard

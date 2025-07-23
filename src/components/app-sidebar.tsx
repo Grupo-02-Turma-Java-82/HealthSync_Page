@@ -11,9 +11,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavLink, useLocation } from "react-router-dom"; // Use react-router-dom
+import { NavLink, useLocation } from "react-router";
 import { Button } from "./ui/button";
-import { useUsers } from "@/hooks/useUsers"; // Importar useUsers
+import { useUsers } from "@/hooks/useUsers";
 import { useAuth } from "@/hooks/useAuth";
 
 const items = [
@@ -35,7 +35,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const { users, isLoading } = useUsers(); // Obter users e isLoading do hook
+  const { users, isLoading } = useUsers();
   const { remove } = useAuth();
 
   const location = useLocation();
@@ -50,8 +50,6 @@ export function AppSidebar() {
       ? "bg-primary text-primary-foreground font-medium"
       : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors";
 
-  // Encontrar o personal trainer na lista de usuários
-  // Assumindo que você tem um usuário com tipoUsuario "TREINADOR"
   const personalTrainer = users.find(
     (user) => user.tipoUsuario === "TREINADOR"
   );
@@ -88,11 +86,10 @@ export function AppSidebar() {
             <div className="flex gap-2">
               <img
                 src="https://ik.imagekit.io/brunogodoy/testepersonal.jpeg?updatedAt=1752258464257"
-                alt="Imagem do Personal" // Removida interpolação desnecessária
+                alt="Imagem do Personal"
                 className="relative flex size-8 shrink-0 overflow-hidden rounded-full h-8 w-8"
               />
               <div className="flex flex-col">
-                {/* Exibir o nome do personal trainer se encontrado e não estiver carregando */}
                 {isLoading ? (
                   <p className="text-sm font-medium animate-pulse">
                     Carregando...

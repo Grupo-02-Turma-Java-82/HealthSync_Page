@@ -44,7 +44,7 @@ export function Login() {
       const response = await api.post("/usuarios/logar", data);
 
       auth.save(response.data);
-      navigate("/dashboard");
+      navigate("/");
     } catch (e) {
       if (e instanceof AxiosError && e.response) {
         setErrorMessage(
@@ -119,11 +119,12 @@ export function Login() {
         </Form>
 
         <p className="text-sm text-muted-foreground mt-6">
-          Não tem uma conta?{" "}
+          Não tem uma conta?
           <NavLink
             to={"/cadastro"}
             className="text-primary hover:underline font-semibold"
           >
+            {" "}
             Cadastre-se
           </NavLink>
         </p>

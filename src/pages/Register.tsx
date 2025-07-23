@@ -1,15 +1,14 @@
 import { Card } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
-import { NavLink } from "react-router-dom"; // Use react-router-dom
-import { FormRegisterStudent } from "@/components/FormRegisterStudent"; // Importar o novo componente
+import { NavLink } from "react-router";
+import { FormRegisterStudent } from "@/components/FormRegisterStudent";
 
 export function Register() {
   return (
     <div className="flex flex-col gap-4 justify-center items-center text-center my-20">
       <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
         Crie sua conta
-      </h1>{" "}
-      {/* Título ajustado para "Criar conta" */}
+      </h1>
       <p className="text-muted-foreground mb-8">
         Preencha os dados para criar sua conta HealthSync
       </p>
@@ -21,18 +20,17 @@ export function Register() {
           Preencha o formulário para cadastrar sua conta
         </p>
 
-        {/* Renderiza o novo componente de cadastro de alunos */}
         <FormRegisterStudent />
 
         <p className="text-sm text-muted-foreground mt-6">
-          Já tem uma conta?{" "}
+          Já tem uma conta?
           <NavLink
             to={"/login"}
             className="text-primary hover:underline font-semibold"
           >
+            {" "}
             Entrar
-          </NavLink>{" "}
-          {/* Texto ajustado para "Entrar" */}
+          </NavLink>
         </p>
       </Card>
       <span className="hover:text-primary transition-colors my-6">
