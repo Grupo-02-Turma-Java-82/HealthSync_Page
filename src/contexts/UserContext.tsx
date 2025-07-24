@@ -73,7 +73,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       fetchUser();
 
-      toast.update(`Usuário ${data.nomeCompleto} atualizado com sucesso!`);
+      toast.success(`Usuário ${data.nomeCompleto} atualizado com sucesso!`);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {

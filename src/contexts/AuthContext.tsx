@@ -62,11 +62,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         token,
         usuarioLogin: JSON.parse(user),
       });
+
+      toast.success("Seja Bem-vindo(a) novamente! 💪🏼");
     }
 
     setIsLoading(false);
-
-    toast.success("Seja Bem-vindo(a) novamente! 💪🏼");
   }
 
   useEffect(() => {

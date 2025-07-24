@@ -65,7 +65,7 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       await api.put(`/exercicios`, data);
 
       fetchExercises();
-      toast.update(`Exercício ${data.nome} atualizado com sucesso`);
+      toast.success(`Exercício ${data.nome} atualizado com sucesso`);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {

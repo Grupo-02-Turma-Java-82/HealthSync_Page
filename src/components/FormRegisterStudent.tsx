@@ -16,6 +16,7 @@ import { z } from "zod";
 import type { User } from "@/models/Users";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   nomeCompleto: z.string().min(3, { message: "Nome completo é obrigatório." }),
@@ -82,13 +83,13 @@ export function FormRegisterStudent({ onClose }: FormRegisterStudentProps) {
     console.log("Dados do novo aluno para envio:", dataToCreate);
     try {
       await create(dataToCreate);
-      alert("Aluno cadastrado com sucesso!");
+      toast.success("Aluno cadastrado com sucesso!");
       form.reset();
       if (onClose) onClose();
       navigate("/login");
     } catch (error) {
       console.error("Erro ao cadastrar aluno:", error);
-      alert("Não foi possível cadastrar o aluno.");
+      toast.error("Não foi possível cadastrar o aluno.");
     }
   }
 

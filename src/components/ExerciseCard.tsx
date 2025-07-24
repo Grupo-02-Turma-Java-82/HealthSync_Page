@@ -7,6 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash, Youtube } from "lucide-react";
 import { useExercises } from "@/hooks/useExercises";
@@ -33,7 +44,6 @@ const getDifficultyVariant = (
 
 export function ExerciseCard({ exercicio }: ExerciseCardProps) {
   const { delete: deleteExercise } = useExercises();
-
   const navigate = useNavigate();
 
   return (
@@ -53,17 +63,17 @@ export function ExerciseCard({ exercicio }: ExerciseCardProps) {
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm font-semibold text-blue-500 hover:underline mb-4"
           >
-            <Youtube size={24} />
+            <Youtube size={20} />
             Assistir ao vídeo de demonstração
           </a>
         )}
-        <div className="text-xs text-muted-foreground mt-2 sm:mt-0">
+        <div className="text-xs text-muted-foreground mt-2">
           Criado em:{" "}
           {exercicio.dataCriacao &&
             new Date(exercicio.dataCriacao).toLocaleDateString("pt-BR")}
         </div>
       </CardContent>
-      <CardFooter className="flex flex-col items-start gap-y-2 sm:flex-row sm:flex-wrap sm:justify-between sm:items-center">
+      <CardFooter className="flex flex-wrap justify-between items-center gap-2">
         <div className="flex flex-wrap gap-2">
           <Badge variant={getDifficultyVariant(exercicio.nivel_dificuldade)}>
             {exercicio.nivel_dificuldade}
@@ -71,28 +81,43 @@ export function ExerciseCard({ exercicio }: ExerciseCardProps) {
           <Badge variant="outline">{exercicio.equipamento_necessario}</Badge>
         </div>
 
-        <div className="flex w-full justify-between">
-          <div className="text-xs text-muted-foreground mt-2">
-            Criado em:{" "}
-            {new Date(exercicio.dataCriacao).toLocaleDateString("pt-BR")}
-          </div>
+        <div className="flex gap-3 items-center">
+          <Edit
+            size={20}
+            className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+            onClick={() => navigate(`editar-exercicio/${exercicio.id}`)}
+          />
 
-          <div className="flex gap-2 mt-2">
-            <Edit
-              size={20}
-              className="hover:opacity-70 transition ease-in-out cursor-pointer"
-              onClick={() => navigate(`editar-exercicio/${exercicio.id}`)}
-            />
-            <Trash
-              size={20}
-              className="hover:text-red-700 transition ease-in-out cursor-pointer"
-              onClick={() => {
-                if (window.confirm("Deseja realmente apagar o exercicio?")) {
-                  deleteExercise(exercicio.id);
-                }
-              }}
-            />
-          </div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Trash
+                size={20}
+                className="text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
+              />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Você tem certeza absoluta?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Essa ação não pode ser desfeita. Isso excluirá permanentemente
+                  o exercício{" "}
+                  <span className="font-semibold text-foreground">
+                    {exercicio.nome}
+                  </span>
+                  .
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => deleteExercise(exercicio.id)}
+                  className="bg-red-600 text-destructive-foreground hover:bg-red-600/90 transition-colors"
+                >
+                  Confirmar Exclusão
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </CardFooter>
     </Card>
