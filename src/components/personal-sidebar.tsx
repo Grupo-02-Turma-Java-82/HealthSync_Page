@@ -6,7 +6,17 @@ import {
   SettingsIcon,
   LogOutIcon,
 } from "lucide-react";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +28,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -52,13 +62,6 @@ const items = [
 
 export function PersonalSidebar() {
   const { remove } = useAuth();
-
-  function logout() {
-    if (window.confirm("Deseja realmente deslogar do sistema?")) {
-      remove();
-    }
-  }
-
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -97,14 +100,34 @@ export function PersonalSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t-[1px] py-4">
-        <Button
-          className="w-full justify-start gap-4"
-          variant="ghost"
-          onClick={logout}
-        >
-          <LogOutIcon size={24} />
-          <p className="text-base">Sair</p>
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button className="w-full justify-start gap-4" variant="ghost">
+              <LogOutIcon size={24} />
+              <p className="text-base">Sair</p>
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Você tem certeza que deseja sair?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Você precisará fazer login novamente para acessar sua conta e
+                continuar gerenciando seus alunos.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={remove}
+                className="bg-red-600 text-destructive-foreground hover:bg-red-600/90 transition-colors"
+              >
+                Confirmar Saída
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </SidebarFooter>
     </Sidebar>
   );
