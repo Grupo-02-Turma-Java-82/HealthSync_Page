@@ -3,6 +3,7 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { UserAPIResponse } from "@/models/Users";
 
 import { api } from "@/services/api";
+import { toast } from "react-toastify";
 
 type AuthContext = {
   isLoading: boolean;
@@ -34,6 +35,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setSession(data);
 
+    toast.success("Logado com sucesso!");
+
     loadUser();
   }
 
@@ -43,6 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
 
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
+
+    toast.success("Deslogado com sucesso!");
   }
 
   function loadUser() {
@@ -60,6 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setIsLoading(false);
+
+    toast.success("Seja Bem-vindo(a) novamente! 💪🏼");
   }
 
   useEffect(() => {
