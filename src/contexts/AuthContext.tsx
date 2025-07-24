@@ -48,6 +48,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
 
     toast.success("Deslogado com sucesso!");
+
+    window.location.assign("/");
   }
 
   function loadUser() {
