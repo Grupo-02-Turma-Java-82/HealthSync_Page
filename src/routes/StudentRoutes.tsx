@@ -1,7 +1,7 @@
-import { UserLayout } from "@/components/UserLayout";
+import { UserLayout } from "@/components/StudentLayout";
 import { ExercisesProvider } from "@/contexts/ExerciseContext";
 import { UserProvider } from "@/contexts/UserContext";
-import UserDashboard from "@/pages/UserDashboard";
+import UserDashboard from "@/pages/StudentDashboard";
 
 import { Routes, Route } from "react-router";
 

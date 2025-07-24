@@ -78,7 +78,7 @@ export function Features() {
                 <div
                   key={index}
                   data-slot="card"
-                  className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border hover:shadow-lg transition-shadow duration-300"
+                  className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border hover:shadow-lg duration-300 hover:scale-105 transition ease-in-out"
                 >
                   <div
                     data-slot="card-header"
@@ -124,7 +124,7 @@ export function Features() {
                 <div
                   key={index}
                   data-slot="card"
-                  className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border hover:shadow-lg transition-shadow duration-300"
+                  className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm border-border hover:shadow-lg duration-300 hover:scale-105 transition ease-in-out"
                 >
                   <div
                     data-slot="card-header"

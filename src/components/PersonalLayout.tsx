@@ -8,9 +8,6 @@ import { UserProvider } from "@/contexts/UserContext";
 export function PersonalLayout() {
   // const { users } = useUsers();
 
-  const nameFull = "Felipe Peronica";
-  const typeUser = "Personal Trainer";
-
   return (
     <main className="w-full md:w-auto">
       <UserProvider>
@@ -19,8 +16,8 @@ export function PersonalLayout() {
 
           <main className="w-screen h-full">
             <NavbarDashboard
-              nameUser={nameFull}
-              typeUser={typeUser}
+              nameUser="Rodrigo Silva"
+              typeUser="Personal Trainer"
               photo="https://ik.imagekit.io/brunogodoy/testepersonal.jpeg?updatedAt=1752258464257"
             />
             <Outlet />

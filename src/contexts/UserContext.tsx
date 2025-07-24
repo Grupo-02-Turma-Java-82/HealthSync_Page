@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import type { User } from "@/models/Users";
 import { api } from "@/services/api";
 import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 type UserContextData = {
   isLoading: boolean;
@@ -29,7 +30,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.get("/usuarios");
       setUsers(response.data ?? []);
-      console.log("Usuários carregados:", response.data);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
@@ -50,11 +50,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.post<User>("/usuarios/cadastrar", userData);
       setUsers((prevUsers) => [...prevUsers, response.data]);
+
+      toast.success(`Usuário ${userData.nomeCompleto} criado com sucesso!`);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
         console.error("API Error: ", e.response?.data.message);
-        alert(
+        toast.error(
           e.response?.data.message || "Não foi possível cadastrar o usuário."
         );
       }
@@ -70,11 +72,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
       await api.put(`/usuarios/atualizar`, data);
 
       fetchUser();
+
+      toast.success(`Usuário ${data.nomeCompleto} atualizado com sucesso!`);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
         console.error("API Error: ", e.response?.data.message);
-        alert(
+        toast.error(
           e.response?.data.message || "Não foi possível atualizar o aluno."
         );
       }

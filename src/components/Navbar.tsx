@@ -1,7 +1,7 @@
 import { Sun, Moon } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import { Button } from "./ui/button";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 export function Navbar() {
   const { setTheme, theme } = useTheme();
@@ -10,7 +10,7 @@ export function Navbar() {
 
   return (
     <nav className="flex justify-between items-center px-4 py-6">
-      <div className="flex justify-center items-center gap-4">
+      <NavLink to="/" className="flex justify-center items-center gap-4">
         <img
           src="https://ik.imagekit.io/brunogodoy/LogoSync.png?updatedAt=1752036904552"
           alt="Imagem de um tigre laranja olhando sério"
@@ -19,7 +19,7 @@ export function Navbar() {
         <h1 className="font-heading font-bold text-base text-foreground md:text-2xl">
           HealthSync
         </h1>
-      </div>
+      </NavLink>
 
       <div className="flex md:gap-4">
         <Button

@@ -1,11 +1,4 @@
-import {
-  Instagram,
-  Facebook,
-  Twitter,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
+import { Phone, MapPin, MailIcon, Linkedin, Github } from "lucide-react";
 
 export function Footer() {
   return (
@@ -13,7 +6,7 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="md:col-span-2">
-            <a className="flex items-center gap-2 mb-4" href="/">
+            <a className="flex items-center gap-2 mb-4" href="#">
               <img
                 src="https://ik.imagekit.io/brunogodoy/LogoSync.png?updatedAt=1752036904552"
                 alt="HealthSync"
@@ -28,21 +21,15 @@ export function Footer() {
             <div className="flex gap-4">
               <a
                 className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth"
-                href="#"
+                href="https://linktr.ee/GenT82G02"
               >
-                <Instagram className="w-5 h-5" />
+                <Linkedin className="w-5 h-5" />
               </a>
               <a
                 className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth"
-                href="#"
+                href="https://github.com/Grupo-02-Turma-Java-82/HealthSync_Page"
               >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-primary transition-smooth"
-                href="#"
-              >
-                <Twitter className="w-5 h-5" />
+                <Github className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -54,15 +41,15 @@ export function Footer() {
               <li>
                 <a
                   className="text-timberwolf hover:text-primary transition-fast"
-                  href="/sobre"
+                  href="#"
                 >
-                  Sobre Nós
+                  Sobre a equipe
                 </a>
               </li>
               <li>
                 <a
                   className="text-timberwolf hover:text-primary transition-fast"
-                  href="/funcionalidades"
+                  href="#features"
                 >
                   Funcionalidades
                 </a>
@@ -70,17 +57,9 @@ export function Footer() {
               <li>
                 <a
                   className="text-timberwolf hover:text-primary transition-fast"
-                  href="/planos"
+                  href="#plans"
                 >
                   Planos e Preços
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-timberwolf hover:text-primary transition-fast"
-                  href="/blog"
-                >
-                  Blog
                 </a>
               </li>
             </ul>
@@ -89,16 +68,16 @@ export function Footer() {
             <h4 className="font-heading font-semibold text-lg mb-4">Contato</h4>
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-timberwolf">
-                <Mail className="w-4 h-4" />
-                <span>contato@healthsync.com.br</span>
+                <MailIcon className="w-4 h-4" />
+                <span>grupo02turmajava82@hotmail.com</span>
               </li>
               <li className="flex items-center gap-2 text-timberwolf">
                 <Phone className="w-4 h-4" />
-                <span>(11) 9999-9999</span>
+                <span>(19) 98735-4650</span>
               </li>
               <li className="flex items-center gap-2 text-timberwolf">
                 <MapPin className="w-4 h-4" />
-                <span>São Paulo, SP</span>
+                <span>Campinas, SP</span>
               </li>
             </ul>
           </div>
@@ -110,13 +89,13 @@ export function Footer() {
           <div className="flex gap-6 text-sm">
             <a
               className="text-timberwolf hover:text-primary transition-fast"
-              href="/termos"
+              href="#"
             >
               Termos de Serviço
             </a>
             <a
               className="text-timberwolf hover:text-primary transition-fast"
-              href="/privacidade"
+              href="#"
             >
               Política de Privacidade
             </a>

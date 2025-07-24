@@ -16,6 +16,7 @@ import { useUsers } from "@/hooks/useUsers";
 import { z } from "zod";
 import type { User } from "@/models/Users";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   nomeCompleto: z.string().min(3, { message: "Nome completo é obrigatório." }),
@@ -122,11 +123,10 @@ export function FormStudents({
 
       try {
         await update(dataToUpdate);
-        alert("Aluno atualizado com sucesso!");
         if (onClose) onClose();
       } catch (error) {
         console.error("Erro ao atualizar aluno:", error);
-        alert("Não foi possível atualizar o aluno.");
+        toast.error("Não foi possível atualizar o aluno.");
       }
     } else {
       if (!values.senha) {
@@ -149,12 +149,12 @@ export function FormStudents({
       console.log("Dados do novo aluno para envio:", dataToCreate);
       try {
         await create(dataToCreate);
-        alert("Aluno cadastrado com sucesso!");
+        toast.success("Aluno cadastrado com sucesso!");
         form.reset();
         if (onClose) onClose();
       } catch (error) {
         console.error("Erro ao cadastrar aluno:", error);
-        alert("Não foi possível cadastrar o aluno.");
+        toast.error("Não foi possível cadastrar o aluno.");
       }
     }
   }

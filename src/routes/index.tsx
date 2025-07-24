@@ -1,9 +1,9 @@
 import { BrowserRouter } from "react-router";
 import { AppRoutes } from "./AppRoutes";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader } from "lucide-react";
-import { PersonalDashboardRoutes } from "./PersonalDashboardRoutes";
-import { UserRoutes } from "./DashboardRoutes";
+import { PersonalDashboardRoutes } from "./PersonalRoutes";
+import { UserRoutes } from "./StudentRoutes";
+import { Loading } from "@/components/Loading";
 
 export function Routes() {
   const { session, isLoading } = useAuth();
@@ -20,11 +20,7 @@ export function Routes() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center">
-        <Loader size={32} className="animate-spin" />
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

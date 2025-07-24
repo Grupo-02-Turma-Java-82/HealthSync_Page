@@ -4,6 +4,7 @@ import { api } from "@/services/api";
 import { AxiosError } from "axios";
 import type { Exercises, CreateExercisePayload } from "@/models/Exercises";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 type ExerciseContextData = {
   isLoading: boolean;
@@ -26,7 +27,6 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.get("/exercicios");
       setExercises(response.data);
-      console.log("Exercícios carregados:", response.data);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
@@ -45,12 +45,12 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
         dataCriacao: format(new Date(), "yyyy-MM-dd"),
       });
       setExercises((prevExercises) => [...prevExercises, response.data]);
-      alert("Exercício cadastrado com sucesso!");
+      toast.success("Exercício cadastrado com sucesso!");
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
         console.error("Erro da API: ", e.response?.data.message);
-        alert(
+        toast.error(
           e.response?.data.message || "Não foi possível cadastrar o exercício."
         );
       }
@@ -65,11 +65,12 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       await api.put(`/exercicios`, data);
 
       fetchExercises();
+      toast.success(`Exercício ${data.nome} atualizado com sucesso`);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
         console.error("Erro da API: ", e.response?.data.message);
-        alert(
+        toast.error(
           e.response?.data.message || "Não foi possível atualizar o exercício."
         );
       }
@@ -82,7 +83,7 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       await api.delete(`/exercicios/${id}`);
-      alert("Exercício excluído com sucesso!");
+      toast.success("Exercício excluído com sucesso!");
       setExercises((prevExercises) =>
         prevExercises.filter((ex) => ex.id !== id)
       );
@@ -90,7 +91,7 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       console.error(e);
       if (e instanceof AxiosError) {
         console.error("Erro da API: ", e.response?.data.message);
-        alert(
+        toast.error(
           e.response?.data.message || "Não foi possível excluir o exercício."
         );
       }

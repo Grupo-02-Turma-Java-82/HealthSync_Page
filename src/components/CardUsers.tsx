@@ -2,7 +2,7 @@ import { useState, type ComponentProps } from "react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { Card } from "./ui/card";
 import type { User } from "@/models/Users";
-import { UserItem } from "./UserItem";
+import { UserItem } from "./StudentItem";
 import { Loader } from "lucide-react";
 import { Button } from "./ui/button";
 

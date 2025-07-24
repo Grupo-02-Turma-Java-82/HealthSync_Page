@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import { NavbarDashboard } from "./NavbarDashboard";
 import { SidebarProvider } from "./ui/sidebar";
-import { AppSidebar } from "./app-sidebar";
+import { AppSidebar } from "./student-sidebar";
 import { UserProvider } from "@/contexts/UserContext";
 
 export function UserLayout() {

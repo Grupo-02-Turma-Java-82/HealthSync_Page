@@ -17,7 +17,7 @@ export function Hero() {
           resultados reais.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <a href="/#planos">
+          <a href="#plans">
             <Button
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 rounded-md hero-gradient shadow-hero hover-lift font-heading font-semibold text-lg px-8 cursor-pointer"
               size="lg"
