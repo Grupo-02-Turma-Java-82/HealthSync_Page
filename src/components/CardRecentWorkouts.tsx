@@ -3,29 +3,29 @@ import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { Card } from "./ui/card";
 import { Loader } from "lucide-react";
 import { Button } from "./ui/button";
-import { ExerciseItem } from "./ExerciseItem";
-import type { Exercises } from "@/models/Exercises";
+import { WorkoutItem } from "./WorkoutItem";
+import type { Workout } from "@/models/Workout";
 
 type Props = ComponentProps<"div"> & {
   title: string;
   subTitle: string;
   icon: IconName;
-  exercises: Exercises[];
+  workouts: Workout[];
   isLoading: boolean;
 };
 
-export function CardRecentExercises({
+export function CardRecentWorkouts({
   title,
   subTitle,
   icon,
-  exercises,
+  workouts,
   isLoading,
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const displayedExercises = isExpanded
-    ? exercises || []
-    : (exercises || []).slice(0, 4);
+  const displayedWorkouts = isExpanded
+    ? workouts || []
+    : (workouts || []).slice(0, 4);
 
   return (
     <Card className="p-6">
@@ -43,25 +43,25 @@ export function CardRecentExercises({
         </div>
       ) : (
         <>
-          {(exercises ?? []).length === 0 ? (
+          {(workouts ?? []).length === 0 ? (
             <div className="text-center text-muted-foreground py-10">
-              <p>Nenhum exercício encontrado.</p>
+              <p>Nenhum treino encontrado.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-4 mt-4">
-              {displayedExercises.map((exercise) => (
-                <ExerciseItem key={exercise.id} exercises={exercise} />
+              {displayedWorkouts.map((workout) => (
+                <WorkoutItem key={workout.id} workout={workout} />
               ))}
             </div>
           )}
 
-          {(exercises ?? []).length > 4 && (
+          {(workouts ?? []).length > 4 && (
             <div className="mt-4 flex justify-center w-full">
               <Button
                 variant="ghost"
                 onClick={() => setIsExpanded(!isExpanded)}
               >
-                {isExpanded ? "Ver menos" : "Ver todos os exercícios"}
+                {isExpanded ? "Ver menos" : "Ver todos os treinos"}
               </Button>
             </div>
           )}

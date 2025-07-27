@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 type ExerciseContextData = {
   isLoading: boolean;
   exercises: Exercises[];
+  fetchExercisesById: (id: number) => Promise<void>;
   create: (data: CreateExercisePayload) => Promise<void>;
   update: (data: Exercises) => Promise<void>;
   delete: (id: number) => Promise<void>;
@@ -26,6 +27,21 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       const response = await api.get("/exercicios");
+      setExercises(response.data);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof AxiosError) {
+        console.error("Erro da API: ", e.response?.data.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchExercisesById(id: number) {
+    try {
+      setIsLoading(true);
+      const response = await api.get(`/exercicios/${id}`);
       setExercises(response.data);
     } catch (e) {
       console.error(e);
@@ -111,6 +127,7 @@ export function ExercisesProvider({ children }: { children: ReactNode }) {
       value={{
         isLoading,
         exercises,
+        fetchExercisesById,
         create,
         update,
         delete: deleteExercise,

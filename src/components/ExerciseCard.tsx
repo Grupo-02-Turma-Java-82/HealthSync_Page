@@ -54,11 +54,11 @@ export function ExerciseCard({ exercicio }: ExerciseCardProps) {
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="text-sm text-muted-foreground mb-4">
-          {exercicio.descricao_detalhada}
+          {exercicio.descricaoDetalhada}
         </p>
-        {exercicio.url_video_demonstrativo && (
+        {exercicio.urlVideoDemonstrativo && (
           <a
-            href={exercicio.url_video_demonstrativo}
+            href={exercicio.urlVideoDemonstrativo}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm font-semibold text-blue-500 hover:underline mb-4"
@@ -75,10 +75,10 @@ export function ExerciseCard({ exercicio }: ExerciseCardProps) {
       </CardContent>
       <CardFooter className="flex flex-wrap justify-between items-center gap-2">
         <div className="flex flex-wrap gap-2">
-          <Badge variant={getDifficultyVariant(exercicio.nivel_dificuldade)}>
-            {exercicio.nivel_dificuldade}
+          <Badge variant={getDifficultyVariant(exercicio.nivelDificuldade)}>
+            {exercicio.nivelDificuldade}
           </Badge>
-          <Badge variant="outline">{exercicio.equipamento_necessario}</Badge>
+          <Badge variant="outline">{exercicio.equipamentoNecessario}</Badge>
         </div>
 
         <div className="flex gap-3 items-center">

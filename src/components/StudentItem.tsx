@@ -1,28 +1,27 @@
-import type { User } from "@/models/Users";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "./ui/badge";
+import type { ListStudents } from "@/models/ListStudents";
 
 type Props = {
-  users: User;
+  student: ListStudents;
 };
 
-export function UserItem({ users }: Props) {
-  const createdAt = new Date(users.dataCadastro);
+export function StudentItem({ student }: Props) {
+  const createdAt = new Date(student.dataVinculo);
 
   const lastWorkout = formatDistanceToNow(createdAt, {
     addSuffix: true,
     locale: ptBR,
   });
 
-  const diffHours = (Date.now() - createdAt.getTime()) / (1000 * 60 * 60);
-  const status = diffHours <= 4 ? "default" : "secondary";
+  const status = student.aluno.ativo ? "default" : "secondary";
 
   return (
     <div className="flex justify-between items-center">
       <div className="flex flex-col">
         <h1 className="text-md font-bold text-foreground">
-          {users.nomeCompleto}
+          {student.aluno.nomeCompleto}
         </h1>
         <p className="text-sm text-muted-foreground">
           Último treino: {lastWorkout}

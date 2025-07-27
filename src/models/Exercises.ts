@@ -1,15 +1,21 @@
-import type { Categories } from "./Categories";
+import type { Workout } from "./Workout";
 
 export type Exercises = {
-  duracao: string;
   id: number;
   nome: string;
-  categoria: Categories;
-  url_video_demonstrativo: string;
-  descricao_detalhada: string;
-  nivel_dificuldade: "INICIANTE" | "INTERMEDIÁRIO" | "AVANCADO";
-  equipamento_necessario: string;
-  dataCriacao: Date;
+  categoria: {
+    id: number;
+    nome?: string;
+  };
+  treinoExercicios?: {
+    id: number;
+    treino: Workout;
+  };
+  urlVideoDemonstrativo: string;
+  descricaoDetalhada: string;
+  nivelDificuldade: "INICIANTE" | "INTERMEDIÁRIO" | "AVANCADO";
+  equipamentoNecessario: string;
+  dataCriacao: string;
 };
 
 export type CreateExercisePayload = Omit<Exercises, "id" | "dataCriacao">;

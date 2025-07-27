@@ -1,13 +1,15 @@
 import { useState } from "react";
 import StudentsDatatable from "@/components/StudentsDatatable";
 import { Button } from "@/components/ui/button";
-import { useUsers } from "@/hooks/useUsers";
 import { Loader, PlusIcon } from "lucide-react";
 import { FormStudents } from "@/components/FormStudents";
+import { usePersonal } from "@/hooks/usePersonal";
 
 export function Students() {
-  const { users, isLoading } = useUsers();
+  const { students, isLoading } = usePersonal();
   const [isForm, setIsForm] = useState(false);
+
+  const studentData = students.map((item) => item.aluno);
 
   return (
     <div className="flex flex-col p-6">
@@ -32,7 +34,7 @@ export function Students() {
           {isForm ? (
             <FormStudents isEditMode={false} />
           ) : (
-            <StudentsDatatable students={users} />
+            <StudentsDatatable students={studentData} />
           )}
         </>
       )}

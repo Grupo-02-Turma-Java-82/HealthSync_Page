@@ -6,38 +6,28 @@ import type { Exercises } from "@/models/Exercises";
 import { Loader } from "lucide-react";
 
 export function NewExercise() {
-  const { id } = useParams<{ id?: string }>();
+  const { id } = useParams<{ id: string }>();
   const isEditMode = !!id;
 
   const { exercises, isLoading: isExercisesLoading } = useExercises();
   const [initialData, setInitialData] = useState<Exercises | null>(null);
-  const [isFetchingInitialData, setIsFetchingInitialData] = useState(true);
 
   useEffect(() => {
-    if (isEditMode && exercises.length > 0) {
+    if (!isEditMode) {
+      setInitialData(null);
+      return;
+    }
+
+    if (isEditMode && !isExercisesLoading) {
+      const exerciseId = parseInt(id, 10);
       const foundExercise = exercises.find(
-        (exercise) => exercise.id === parseInt(id!)
+        (exercise) => exercise.id === exerciseId
       );
-      if (foundExercise) {
-        setInitialData(foundExercise);
-      } else {
-        console.warn(`Exercício com ID ${id} não encontrado.`);
-        setInitialData(null);
-      }
-      setIsFetchingInitialData(false);
-    } else if (!isEditMode) {
-      setInitialData(null);
-      setIsFetchingInitialData(false);
-    } else if (isExercisesLoading) {
-      setIsFetchingInitialData(true);
-    } else if (isEditMode && exercises.length === 0 && !isExercisesLoading) {
-      console.warn(`Nenhum exercício carregado para ID ${id}.`);
-      setInitialData(null);
-      setIsFetchingInitialData(false);
+      setInitialData(foundExercise || null);
     }
   }, [id, isEditMode, exercises, isExercisesLoading]);
 
-  if (isEditMode && isFetchingInitialData) {
+  if (isEditMode && isExercisesLoading) {
     return (
       <div className="flex flex-col p-6 gap-6 items-center justify-center h-screen">
         <Loader className="animate-spin text-primary" size={48} />

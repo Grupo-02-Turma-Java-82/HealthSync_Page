@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router";
 import { AppRoutes } from "./AppRoutes";
 import { useAuth } from "@/hooks/useAuth";
-import { PersonalDashboardRoutes } from "./PersonalRoutes";
+import { PersonalRoutes } from "./PersonalRoutes";
 import { UserRoutes } from "./StudentRoutes";
 import { Loading } from "@/components/Loading";
 
@@ -13,7 +13,7 @@ export function Routes() {
       case "ALUNO":
         return <UserRoutes />;
       case "TREINADOR":
-        return <PersonalDashboardRoutes />;
+        return <PersonalRoutes />;
       default:
         return <AppRoutes />;
     }

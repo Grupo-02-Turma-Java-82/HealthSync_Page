@@ -1,19 +1,19 @@
-import type { Exercises } from "./Exercises";
-
 export type User = {
-  id: number;
+  id?: number;
   nomeCompleto: string;
+  urlImagem: string;
   email: string;
   senha: string;
-  exercicios: Exercises[];
-  dataNascimento: Date;
+  dataNascimento: string;
   genero: string;
   alturaCm: number;
   pesoKg: number;
   imc?: number;
   objetivoPrincipal: string;
-  dataCadastro: Date;
+  dataCadastro?: string;
+  dataDesativacao?: string;
   tipoUsuario: "ALUNO" | "TREINADOR" | "ADMINISTRADOR";
+  ativo?: boolean;
 };
 
 export type UserLogin = {

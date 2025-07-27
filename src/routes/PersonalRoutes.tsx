@@ -3,20 +3,28 @@ import { NewExercise } from "@/pages/NewExercise";
 import { Exercises } from "@/pages/Exercises";
 import { Students } from "@/pages/Students";
 import { Routes, Route } from "react-router";
-import { PersonalDashboard } from "@/pages/PersonalDashboard";
-import { UserProvider } from "@/contexts/UserContext";
+import { Personal } from "@/pages/Personal";
 import { ExercisesProvider } from "@/contexts/ExerciseContext";
+import { PersonalProvider } from "@/contexts/PersonalContext";
+import { WorkoutProvider } from "@/contexts/WorkoutContext";
+import { CategoriesProvider } from "@/contexts/CategoriesContext";
 
-export function PersonalDashboardRoutes() {
+export function PersonalRoutes() {
   return (
     <Routes>
       <Route path="/" element={<PersonalLayout />}>
         <Route
           index
           element={
-            <ExercisesProvider>
-              <PersonalDashboard />
-            </ExercisesProvider>
+            <PersonalProvider>
+              <WorkoutProvider>
+                <CategoriesProvider>
+                  <ExercisesProvider>
+                    <Personal />
+                  </ExercisesProvider>
+                </CategoriesProvider>
+              </WorkoutProvider>
+            </PersonalProvider>
           }
         />
       </Route>
@@ -25,9 +33,9 @@ export function PersonalDashboardRoutes() {
         <Route
           index
           element={
-            <UserProvider>
+            <PersonalProvider>
               <Students />
-            </UserProvider>
+            </PersonalProvider>
           }
         />
       </Route>
@@ -36,9 +44,11 @@ export function PersonalDashboardRoutes() {
         <Route
           index
           element={
-            <ExercisesProvider>
-              <Exercises />
-            </ExercisesProvider>
+            <CategoriesProvider>
+              <ExercisesProvider>
+                <Exercises />
+              </ExercisesProvider>
+            </CategoriesProvider>
           }
         />
       </Route>
@@ -47,9 +57,11 @@ export function PersonalDashboardRoutes() {
         <Route
           index
           element={
-            <ExercisesProvider>
-              <NewExercise />
-            </ExercisesProvider>
+            <CategoriesProvider>
+              <ExercisesProvider>
+                <NewExercise />
+              </ExercisesProvider>
+            </CategoriesProvider>
           }
         />
       </Route>
@@ -61,9 +73,11 @@ export function PersonalDashboardRoutes() {
         <Route
           index
           element={
-            <ExercisesProvider>
-              <NewExercise />
-            </ExercisesProvider>
+            <CategoriesProvider>
+              <ExercisesProvider>
+                <NewExercise />
+              </ExercisesProvider>
+            </CategoriesProvider>
           }
         />
       </Route>

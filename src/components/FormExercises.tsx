@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -21,14 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import type { Categories } from "@/models/Categories";
-import { useExercises } from "@/hooks/useExercises";
-import { api } from "@/services/api";
-import { AxiosError } from "axios";
 import type { CreateExercisePayload, Exercises } from "@/models/Exercises";
+import { useExercises } from "@/hooks/useExercises";
+import { useCategories } from "@/hooks/useCategories";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const formSchema = z.object({
   nome: z
@@ -38,16 +36,16 @@ const formSchema = z.object({
   categoriaId: z.coerce
     .number()
     .positive({ message: "Selecione uma categoria." }),
-  descricao_detalhada: z.string().optional(),
-  nivel_dificuldade: z.enum(["INICIANTE", "INTERMEDIÁRIO", "AVANCADO"], {
+  descricaoDetalhada: z.string().optional(),
+  nivelDificuldade: z.enum(["INICIANTE", "INTERMEDIÁRIO", "AVANCADO"], {
     errorMap: () => ({ message: "Selecione um nível de dificuldade válido." }),
   }),
-  url_video_demonstrativo: z
+  urlVideoDemonstrativo: z
     .string()
     .url({ message: "Insira uma URL de vídeo válida." })
     .optional()
     .or(z.literal("")),
-  equipamento_necessario: z
+  equipamentoNecessario: z
     .string()
     .min(3, { message: "O equipamento necessário é obrigatório." })
     .optional()
@@ -60,89 +58,79 @@ type FormExercisesProps = {
   onSubmitSuccess?: () => void;
 };
 
-export function FormExercises({}: FormExercisesProps) {
-  const { create, isLoading } = useExercises();
-
+export function FormExercises({
+  isEditMode = false,
+  initialData = null,
+  onSubmitSuccess,
+}: FormExercisesProps) {
+  const { create, update, isLoading } = useExercises();
+  const { categories, isLoading: isLoadingCategories } = useCategories();
   const navigate = useNavigate();
 
-  const [categories, setCategories] = useState<Categories[]>([]);
-  const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
-  const [categoriesError, setCategoriesError] = useState<string | null>(null);
+  console.log("Dados Iniciais: ", initialData);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       nome: "",
       categoriaId: undefined,
-      descricao_detalhada: "",
-      nivel_dificuldade: "INICIANTE",
-      url_video_demonstrativo: "",
-      equipamento_necessario: "",
+      descricaoDetalhada: "",
+      nivelDificuldade: "INICIANTE",
+      urlVideoDemonstrativo: "",
+      equipamentoNecessario: "",
     },
   });
 
   useEffect(() => {
-    async function fetchCategories() {
-      setIsCategoriesLoading(true);
-      setCategoriesError(null);
-      try {
-        const response = await api.get<Categories[]>("/categorias");
-        setCategories(response.data || []);
-      } catch (e) {
-        console.error("Erro ao buscar categorias:", e);
-        if (e instanceof AxiosError) {
-          setCategoriesError(
-            e.response?.data.message ||
-              "Não foi possível carregar as categorias."
-          );
-        } else {
-          setCategoriesError(
-            "Ocorreu um erro desconhecido ao carregar categorias."
-          );
-        }
-      } finally {
-        setIsCategoriesLoading(false);
-      }
+    if (isEditMode && initialData && categories.length > 0) {
+      form.reset({
+        nome: initialData.nome,
+        categoriaId: initialData.categoria.id,
+        descricaoDetalhada: initialData.descricaoDetalhada,
+        nivelDificuldade: initialData.nivelDificuldade,
+        urlVideoDemonstrativo: initialData.urlVideoDemonstrativo,
+        equipamentoNecessario: initialData.equipamentoNecessario,
+      });
     }
-
-    fetchCategories();
-  }, []);
+  }, [isEditMode, initialData, categories]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const selectedCategory = categories.find(
-      (cat) => cat.id === values.categoriaId
+    if (isEditMode) {
+      if (!initialData?.id) {
+        toast.error("ID do exercício não encontrado para atualização.");
+        return;
+      }
+      const dataToUpdate = {
+        ...initialData,
+        id: initialData.id,
+        ...values,
+        categoria: {
+          id: values.categoriaId,
+        },
+      };
+      await update(dataToUpdate as Exercises);
+    } else {
+      const dataToCreate = {
+        ...values,
+        categoria: {
+          id: values.categoriaId,
+        },
+      };
+      await create(dataToCreate as CreateExercisePayload);
+    }
+    if (onSubmitSuccess) {
+      onSubmitSuccess();
+    } else {
+      navigate("/exercicios");
+    }
+  }
+
+  if (isLoadingCategories) {
+    return (
+      <div className="flex items-center justify-center p-6 bg-card rounded-lg shadow-sm min-h-[400px]">
+        <Loader size={32} className="animate-spin text-primary" />
+      </div>
     );
-
-    if (!selectedCategory) {
-      console.error("Categoria selecionada inválida ou não encontrada.");
-      form.setError("categoriaId", {
-        type: "manual",
-        message: "Selecione uma categoria válida.",
-      });
-      return;
-    }
-
-    const newExerciseData: CreateExercisePayload = {
-      nome: values.nome,
-      categoria: selectedCategory,
-      descricao_detalhada: values.descricao_detalhada ?? "",
-      nivel_dificuldade: values.nivel_dificuldade,
-      url_video_demonstrativo: values.url_video_demonstrativo ?? "",
-      equipamento_necessario: values.equipamento_necessario ?? "",
-      duracao: "",
-    };
-
-    if (!newExerciseData.categoria) {
-      console.error("Categoria selecionada inválida.");
-      form.setError("categoriaId", {
-        type: "manual",
-        message: "Selecione uma categoria válida.",
-      });
-      return;
-    }
-
-    create(newExerciseData);
-    navigate("/exercicios");
   }
 
   return (
@@ -174,32 +162,14 @@ export function FormExercises({}: FormExercisesProps) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {isCategoriesLoading ? (
-                    <SelectItem value="loading-placeholder" disabled>
-                      Carregando categorias...
-                    </SelectItem>
-                  ) : categoriesError ? (
+                  {categories?.map((categoria) => (
                     <SelectItem
-                      value="error-placeholder"
-                      disabled
-                      className="text-red-500"
+                      key={categoria.id}
+                      value={categoria.id.toString()}
                     >
-                      {categoriesError}
+                      {categoria.nome}
                     </SelectItem>
-                  ) : categories.length === 0 ? (
-                    <SelectItem value="no-categories-placeholder" disabled>
-                      Nenhuma categoria encontrada.
-                    </SelectItem>
-                  ) : (
-                    categories.map((categoria) => (
-                      <SelectItem
-                        key={categoria.id}
-                        value={categoria.id.toString()}
-                      >
-                        {categoria.nome}
-                      </SelectItem>
-                    ))
-                  )}
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -209,7 +179,7 @@ export function FormExercises({}: FormExercisesProps) {
 
         <FormField
           control={form.control}
-          name="descricao_detalhada"
+          name="descricaoDetalhada"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Descrição Detalhada</FormLabel>
@@ -227,7 +197,7 @@ export function FormExercises({}: FormExercisesProps) {
 
         <FormField
           control={form.control}
-          name="nivel_dificuldade"
+          name="nivelDificuldade"
           render={({ field }) => (
             <FormItem className="space-y-3">
               <FormLabel>Nível de Dificuldade *</FormLabel>
@@ -264,7 +234,7 @@ export function FormExercises({}: FormExercisesProps) {
 
         <FormInput
           control={form.control}
-          name="url_video_demonstrativo"
+          name="urlVideoDemonstrativo"
           label="URL do Vídeo Demonstrativo"
           placeholder="Ex: https://www.youtube.com/watch?v=exemplo"
           type="url"
@@ -272,7 +242,7 @@ export function FormExercises({}: FormExercisesProps) {
 
         <FormInput
           control={form.control}
-          name="equipamento_necessario"
+          name="equipamentoNecessario"
           label="Equipamento Necessário"
           placeholder="Ex: Halteres, Barra, Máquina"
         />
@@ -280,9 +250,19 @@ export function FormExercises({}: FormExercisesProps) {
         <Button disabled={isLoading} type="submit" className="w-full">
           {isLoading ? (
             <Loader size={26} className="animate-spin" />
+          ) : isEditMode ? (
+            "Atualizar Exercício"
           ) : (
             "Cadastrar Exercício"
           )}
+        </Button>
+
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => navigate("/exercicios")}
+        >
+          Cancelar
         </Button>
       </form>
     </Form>

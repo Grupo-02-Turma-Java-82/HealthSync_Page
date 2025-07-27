@@ -2,70 +2,56 @@ import { useMemo } from "react";
 import { PlusIcon } from "lucide-react";
 
 import { CardDashboard } from "@/components/CardDashboard";
-import { CardRecentExercises } from "@/components/CardExercises";
-import { CardUsers } from "@/components/CardUsers";
+import { CardRecentWorkouts } from "@/components/CardRecentWorkouts";
 import { Button } from "@/components/ui/button";
-import { useUsers } from "@/hooks/useUsers";
 import { useNavigate } from "react-router";
 import { useExercises } from "@/hooks/useExercises";
+import { usePersonal } from "@/hooks/usePersonal";
+import { CardStudents } from "@/components/CardStudents";
+import { useWorkouts } from "@/hooks/useWorkouts";
+import { useCategories } from "@/hooks/useCategories";
 
-export function PersonalDashboard() {
-  const { users, isLoading } = useUsers();
+export function Personal() {
+  const { students } = usePersonal();
+  const { workouts, isLoading } = useWorkouts();
   const { exercises } = useExercises();
+  const { categories } = useCategories();
 
   const navigate = useNavigate();
 
   const dashboardData = useMemo(() => {
-    if (!users || users.length === 0) {
-      return {
-        totalUsers: 0,
-        newUsersThisMonth: 0,
-        usersGrowthPercentage: 0,
-        totalExercises: 0,
-        newExercisesThisWeek: 0,
-        exercisesGrowthPercentage: 0,
-        totalCategories: 0,
-      };
-    }
-
     const today = new Date();
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    const totalUsers = users.length;
-    const newUsersThisMonth = users.filter(
-      (user) => user.dataCadastro && new Date(user.dataCadastro) >= startOfMonth
+    const totalUsers = students.length;
+    const newUsersThisMonth = students.filter(
+      (user) => user.dataVinculo && new Date(user.dataVinculo) >= startOfMonth
     ).length;
     const usersGrowthPercentage =
       totalUsers > 0 ? Math.round((newUsersThisMonth / totalUsers) * 100) : 0;
 
-    const allExercises = users.flatMap((user) => user.exercicios || []);
-    const totalExercises = allExercises.length;
-    const newExercisesThisWeek = allExercises.filter(
-      (exercise) =>
-        exercise.dataCriacao && new Date(exercise.dataCriacao) >= startOfWeek
+    const totalWorkouts = workouts.length;
+    const newWorkoutsThisMonth = workouts.filter(
+      (workout) =>
+        workout && new Date(workout.dataCriacao) >= startOfMonth
     ).length;
-    const exercisesGrowthPercentage =
-      totalExercises > 0
-        ? Math.round((newExercisesThisWeek / totalExercises) * 100)
+    const workoutsGrowthPercentage =
+      totalWorkouts > 0
+        ? Math.round((newWorkoutsThisMonth / totalWorkouts) * 100)
         : 0;
 
-    const categorySet = new Set(allExercises.map((ex) => ex.categoria.nome));
-    const totalCategories = categorySet.size;
+    const totalExercises = exercises.length;
 
     return {
       totalUsers,
       newUsersThisMonth,
       usersGrowthPercentage,
+      totalWorkouts,
+      newWorkoutsThisMonth,
+      workoutsGrowthPercentage,
       totalExercises,
-      newExercisesThisWeek,
-      exercisesGrowthPercentage,
-      totalCategories,
     };
-  }, [users]);
+  }, [students, workouts, exercises]);
 
   return (
     <div className="flex flex-col p-6 gap-6">
@@ -92,35 +78,35 @@ export function PersonalDashboard() {
           porcent={dashboardData.usersGrowthPercentage}
         />
         <CardDashboard
-          title="Exercícios Ativos"
+          title="Treinos Criados"
           icon="dumbbell"
-          data={dashboardData.totalExercises}
-          subTitle={`${dashboardData.newExercisesThisWeek} criados esta semana`}
-          porcent={dashboardData.exercisesGrowthPercentage}
+          data={dashboardData.totalWorkouts}
+          subTitle={`${dashboardData.newWorkoutsThisMonth} novos este mês`}
+          porcent={dashboardData.workoutsGrowthPercentage}
         />
         <CardDashboard
-          title="Categorias na Biblioteca"
+          title="Exercícios na Biblioteca"
           icon="book-open"
-          data={dashboardData.totalCategories}
-          subTitle="Categorias de exercícios únicas"
+          data={dashboardData.totalExercises}
+          subTitle={`Organizados em ${categories.length} categorias`}
           porcent={0}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-4">
-        <CardUsers
+        <CardStudents
           icon="activity"
           title="Atividade dos Alunos"
           subTitle="Últimas atividades dos seus alunos"
-          users={users}
+          students={students}
           isLoading={isLoading}
         />
 
-        <CardRecentExercises
+        <CardRecentWorkouts
           icon="dumbbell"
-          title="Exercícios Recentes"
-          subTitle="Últimos exercícios criados"
-          exercises={exercises}
+          title="Treinos Recentes"
+          subTitle="Últimos treinos criados"
+          workouts={workouts}
           isLoading={isLoading}
         />
       </div>
