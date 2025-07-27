@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import StudentsDatatable from "@/components/StudentsDatatable";
 import { Button } from "@/components/ui/button";
 import { Loader, PlusIcon } from "lucide-react";
 import { FormStudents } from "@/components/FormStudents";
 import { usePersonal } from "@/hooks/usePersonal";
+import type { ListStudents } from "@/models/ListStudents";
+import type { User } from "@/models/Users";
 
 export function Students() {
   const { students, isLoading } = usePersonal();
   const [isForm, setIsForm] = useState(false);
 
-  const studentData = students.map((item) => item.aluno);
+  const normalizedStudents = useMemo(() => {
+    if (!Array.isArray(students)) {
+      return [];
+    }
+
+    return students
+      .map((item) => {
+        if (!item) {
+          return null;
+        }
+
+        if ("aluno" in item && item.aluno) {
+          return item as ListStudents;
+        }
+
+        return { aluno: item as unknown as User } as ListStudents;
+      })
+      .filter(Boolean) as ListStudents[];
+  }, [students]);
 
   return (
     <div className="flex flex-col p-6">
@@ -32,9 +52,9 @@ export function Students() {
       ) : (
         <>
           {isForm ? (
-            <FormStudents isEditMode={false} />
+            <FormStudents isEditMode={false} onClose={() => setIsForm(false)} />
           ) : (
-            <StudentsDatatable students={studentData} />
+            <StudentsDatatable students={normalizedStudents} />
           )}
         </>
       )}

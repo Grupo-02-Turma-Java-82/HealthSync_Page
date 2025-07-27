@@ -40,17 +40,17 @@ import { EmptyTable } from "../EmptyTable";
 import { Edit, SearchIcon } from "lucide-react";
 
 import { FormStudents } from "../FormStudents";
-import type { User } from "@/models/Users";
+import type { ListStudents } from "@/models/ListStudents";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData extends User | null | undefined, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<
+  TData extends ListStudents | null | undefined,
+  TValue
+>({ columns, data }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<TData | null>(null);

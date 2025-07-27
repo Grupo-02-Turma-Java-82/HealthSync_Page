@@ -18,6 +18,7 @@ import type { User } from "@/models/Users";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import { usePersonal } from "@/hooks/usePersonal";
+import type { ListStudents } from "@/models/ListStudents";
 
 const formSchema = z.object({
   nomeCompleto: z.string().min(3, { message: "Nome completo é obrigatório." }),
@@ -44,7 +45,7 @@ const formSchema = z.object({
 
 type FormStudentsProps = {
   isEditMode: boolean;
-  initialData?: User | null;
+  initialData?: ListStudents | null;
   onClose?: () => void;
 };
 
@@ -73,24 +74,24 @@ export function FormStudents({
   });
 
   useEffect(() => {
-    if (isEditMode && initialData) {
+    if (isEditMode && initialData?.aluno) {
       form.reset({
-        nomeCompleto: initialData.nomeCompleto,
-        email: initialData.email,
-        urlImagem: initialData.urlImagem,
+        nomeCompleto: initialData.aluno.nomeCompleto,
+        email: initialData.aluno.email,
+        urlImagem: initialData.aluno.urlImagem,
         dataNascimento: format(
-          new Date(initialData.dataNascimento),
+          new Date(initialData.aluno.dataNascimento),
           "yyyy-MM-dd"
         ),
-        genero: initialData.genero as
+        genero: initialData.aluno.genero as
           | "Masculino"
           | "Feminino"
           | "Não-binário"
           | "Outro",
-        alturaCm: initialData.alturaCm,
-        pesoKg: initialData.pesoKg,
-        objetivoPrincipal: initialData.objetivoPrincipal,
-        tipoUsuario: initialData.tipoUsuario,
+        alturaCm: initialData.aluno.alturaCm,
+        pesoKg: initialData.aluno.pesoKg,
+        objetivoPrincipal: initialData.aluno.objetivoPrincipal,
+        tipoUsuario: initialData.aluno.tipoUsuario,
       });
     } else {
       form.reset({
@@ -110,24 +111,23 @@ export function FormStudents({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (isEditMode) {
-      if (!initialData?.id) {
+      if (!initialData?.aluno?.id) {
         toast.error("ID do usuário não encontrado para atualização.");
         return;
       }
 
-      // --- CORREÇÃO APLICADA AQUI ---
-      // Validação para garantir que a senha foi preenchida na atualização
+      const updatePayload: Partial<User> = {
+        ...values,
+      };
+
       if (!values.senha) {
-        form.setError("senha", {
-          message: "A nova senha é obrigatória para atualizar.",
-        });
-        return;
+        delete updatePayload.senha;
       }
 
       const dataToUpdate = {
-        ...initialData,
-        ...values,
-        id: initialData.id,
+        ...initialData.aluno,
+        ...updatePayload,
+        id: initialData.aluno.id,
       };
 
       try {
@@ -155,7 +155,7 @@ export function FormStudents({
       };
 
       try {
-        await create(dataToCreate);
+        await create(dataToCreate as User);
         toast.success("Aluno cadastrado com sucesso!");
         form.reset();
         if (onClose) onClose();
@@ -261,25 +261,17 @@ export function FormStudents({
           placeholder="Ex: Hipertrofia, Perda de peso..."
         />
 
-        {/* --- CORREÇÃO APLICADA AQUI --- */}
-        {/* Agora o campo de senha é sempre visível, mas com labels diferentes */}
-        {isEditMode ? (
-          <FormInput
-            control={form.control}
-            name="senha"
-            label="Nova Senha *"
-            type="password"
-            placeholder="Digite a senha para atualizar"
-          />
-        ) : (
-          <FormInput
-            control={form.control}
-            name="senha"
-            label="Senha do aluno *"
-            type="password"
-            placeholder="Digite a senha..."
-          />
-        )}
+        <FormInput
+          control={form.control}
+          name="senha"
+          label={isEditMode ? "Nova Senha (opcional)" : "Senha *"}
+          type="password"
+          placeholder={
+            isEditMode
+              ? "Deixe em branco para não alterar"
+              : "Digite a senha..."
+          }
+        />
 
         <div className="flex justify-end mt-4">
           <Button type="submit" className="cursor-pointer">

@@ -56,18 +56,18 @@ type FormExercisesProps = {
   isEditMode?: boolean;
   initialData?: Exercises | null;
   onSubmitSuccess?: () => void;
+  onClose?: () => void;
 };
 
 export function FormExercises({
   isEditMode = false,
   initialData = null,
   onSubmitSuccess,
+  onClose,
 }: FormExercisesProps) {
   const { create, update, isLoading } = useExercises();
   const { categories, isLoading: isLoadingCategories } = useCategories();
   const navigate = useNavigate();
-
-  console.log("Dados Iniciais: ", initialData);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -92,7 +92,7 @@ export function FormExercises({
         equipamentoNecessario: initialData.equipamentoNecessario,
       });
     }
-  }, [isEditMode, initialData, categories]);
+  }, [isEditMode, initialData, categories, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (isEditMode) {
@@ -117,6 +117,7 @@ export function FormExercises({
         },
       };
       await create(dataToCreate as CreateExercisePayload);
+      if (onClose) onClose();
     }
     if (onSubmitSuccess) {
       onSubmitSuccess();
@@ -257,11 +258,7 @@ export function FormExercises({
           )}
         </Button>
 
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => navigate("/exercicios")}
-        >
+        <Button variant="outline" className="w-full" onClick={onClose}>
           Cancelar
         </Button>
       </form>

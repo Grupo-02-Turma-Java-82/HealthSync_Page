@@ -1,18 +1,19 @@
-import type { User } from "@/models/Users";
 import { type ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./ui/datatable";
 import { format, differenceInYears } from "date-fns";
+import type { ListStudents } from "@/models/ListStudents";
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<ListStudents>[] = [
   {
-    accessorKey: "nomeCompleto",
+    accessorFn: (row) => row.aluno.nomeCompleto,
+    id: "nomeCompleto",
     header: "Nome",
   },
   {
     id: "idade",
     header: "Idade",
     cell: ({ row }) => {
-      const dataNascimento = row.original.dataNascimento;
+      const dataNascimento = row.original.aluno.dataNascimento;
       if (!dataNascimento) {
         return <span>-</span>;
       }
@@ -21,22 +22,25 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "genero",
+    accessorFn: (row) => row.aluno.genero,
+    id: "genero",
     header: "Gênero",
   },
   {
-    accessorKey: "alturaCm",
+    accessorFn: (row) => row.aluno.alturaCm,
+    id: "alturaCm",
     header: "Altura (cm)",
   },
   {
-    accessorKey: "pesoKg",
+    accessorFn: (row) => row.aluno.pesoKg,
+    id: "pesoKg",
     header: "Peso (Kg)",
   },
   {
     accessorKey: "imc",
     header: "IMC",
     cell: ({ row }) => {
-      const imc = row.original.imc;
+      const imc = row.original.aluno.imc;
 
       if (typeof imc !== "number") {
         return <span>-</span>;
@@ -51,7 +55,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "dataCadastro",
     header: "Cadastrado em",
     cell: ({ row }) => {
-      const dataCadastro = row.getValue("dataCadastro") as Date;
+      const dataCadastro = row.original.aluno.dataCadastro;
       if (!dataCadastro) {
         return <span>-</span>;
       }
@@ -62,10 +66,10 @@ export const columns: ColumnDef<User>[] = [
 ];
 
 interface Props {
-  students: User[];
+  students: ListStudents[];
   deleteCustomer?: (id: number) => void;
 }
 
 export default function StudentsDatatable({ students }: Props) {
-  return <DataTable<User, unknown> columns={columns} data={students} />;
+  return <DataTable<ListStudents, unknown> columns={columns} data={students} />;
 }

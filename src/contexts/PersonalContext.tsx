@@ -35,8 +35,14 @@ export function PersonalProvider({ children }: { children: ReactNode }) {
   async function create(data: User) {
     try {
       setIsLoading(true);
-      const response = await api.post("/treinadores/alunos", data);
-      setStudents((prevStudent) => [...prevStudent, response.data]);
+      const response = await api.post<ListStudents>(
+        "/treinadores/alunos",
+        data
+      );
+
+      const newStudentLink = response.data;
+
+      setStudents((prevStudents) => [...prevStudents, newStudentLink]);
 
       toast.success(`Aluno ${data.nomeCompleto} criado com sucesso`);
     } catch (e) {
@@ -51,6 +57,7 @@ export function PersonalProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     fetchStudents();
+    console.log(students);
   }, []);
 
   return (

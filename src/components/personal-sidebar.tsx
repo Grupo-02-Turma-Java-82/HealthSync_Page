@@ -49,8 +49,8 @@ const items = [
     icon: BookOpen,
   },
   {
-    title: "Montar Exercício",
-    url: "/novo-exercicio",
+    title: "Montar Treino",
+    url: "/novo-treino",
     icon: DumbbellIcon,
   },
   {

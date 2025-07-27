@@ -36,7 +36,7 @@ export function FormInput({
           <FormControl>
             <div
               className={cn(
-                "flex h-10 w-full items-center rounded-md border border-input bg-background text-sm ring-offset-background",
+                "flex h-10 w-full items-center rounded-md border border-input text-sm ring-offset-background",
                 "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
               )}
             >
@@ -50,7 +50,7 @@ export function FormInput({
                 {...field}
                 {...rest}
                 className={cn(
-                  "h-full w-full border-none bg-transparent p-3 shadow-none outline-none ring-offset-0",
+                  "h-full w-full border-none p-3 shadow-none outline-none ring-offset-0",
                   "focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0",
                   icon && "pl-10"
                 )}

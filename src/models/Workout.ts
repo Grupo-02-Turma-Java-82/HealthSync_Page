@@ -1,4 +1,3 @@
-import type { User } from "./Users";
 import type { WorkoutExercises } from "./WorkoutExercise";
 
 export type Workout = {
@@ -8,6 +7,18 @@ export type Workout = {
   concluido: boolean;
   dataUltimaConclusao: string;
   dataCriacao: string;
-  usuario: User[];
+  usuario: {
+    id: number;
+    nome?: string;
+  };
   treinoExercicios: WorkoutExercises[];
 };
+
+export type CreateWorkoutPayload = Omit<
+  Workout,
+  | "id"
+  | "dataCriacao"
+  | "dataUltimaConclusao"
+  | "concluido"
+  | "treinoExercicios"
+>;

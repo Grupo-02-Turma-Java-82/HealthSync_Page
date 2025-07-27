@@ -8,6 +8,7 @@ import { ExercisesProvider } from "@/contexts/ExerciseContext";
 import { PersonalProvider } from "@/contexts/PersonalContext";
 import { WorkoutProvider } from "@/contexts/WorkoutContext";
 import { CategoriesProvider } from "@/contexts/CategoriesContext";
+import { NewWorkout } from "@/pages/NewWorkout";
 
 export function PersonalRoutes() {
   return (
@@ -53,15 +54,19 @@ export function PersonalRoutes() {
         />
       </Route>
 
-      <Route path="/novo-exercicio" element={<PersonalLayout />}>
+      <Route path="/novo-treino" element={<PersonalLayout />}>
         <Route
           index
           element={
-            <CategoriesProvider>
-              <ExercisesProvider>
-                <NewExercise />
-              </ExercisesProvider>
-            </CategoriesProvider>
+            <WorkoutProvider>
+              <CategoriesProvider>
+                <PersonalProvider>
+                  <ExercisesProvider>
+                    <NewWorkout />
+                  </ExercisesProvider>
+                </PersonalProvider>
+              </CategoriesProvider>
+            </WorkoutProvider>
           }
         />
       </Route>

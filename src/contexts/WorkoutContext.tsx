@@ -1,4 +1,4 @@
-import type { Workout } from "@/models/Workout";
+import type { CreateWorkoutPayload, Workout } from "@/models/Workout";
 import { api } from "@/services/api";
 import { AxiosError } from "axios";
 import { createContext, useEffect, useState, type ReactNode } from "react";
@@ -8,10 +8,20 @@ type WorkoutContextData = {
   isLoading: boolean;
   workouts: Workout[];
   isComplete: boolean;
-  create: (data: Workout) => Promise<void>;
+  create: (data: CreateWorkoutPayload) => Promise<Workout | null>;
   update: (data: Workout) => Promise<void>;
   deleteWorkout: (id: number) => Promise<void>;
   setComplete: (id: number) => Promise<void>;
+  createWorkoutExerciseLink: (linkPayload: linkPayload) => Promise<void>;
+};
+
+type linkPayload = {
+  treino: {
+    id: number;
+  };
+  exercicio: {
+    id: number;
+  };
 };
 
 export const WorkoutContext = createContext({} as WorkoutContextData);
@@ -36,12 +46,16 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function create(data: Workout) {
+  async function create(
+    payload: CreateWorkoutPayload
+  ): Promise<Workout | null> {
     try {
       setIsLoading(true);
-      const response = await api.post("/treinos", data);
+      const response = await api.post("/treinos", payload);
       setWorkouts((prevWorkout) => [...prevWorkout, response.data]);
       toast.success("Treino cadastrado com sucesso!");
+
+      return response.data;
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
@@ -50,9 +64,15 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
           e.response?.data.message || "Não foi possível cadastrar o treino."
         );
       }
+
+      return null;
     } finally {
       setIsLoading(false);
     }
+  }
+
+  async function createWorkoutExerciseLink(payload: linkPayload) {
+    await api.post("/treinoexercicios", payload);
   }
 
   async function update(data: Workout) {
@@ -126,6 +146,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
         update,
         deleteWorkout,
         setComplete,
+        createWorkoutExerciseLink,
       }}
     >
       {children}

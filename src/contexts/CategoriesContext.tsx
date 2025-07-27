@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 type CategoriesContextData = {
   isLoading: boolean;
   categories: Categories[];
+  fetchCategoriesById: (id: number) => Promise<void>;
   create: (data: Categories) => Promise<void>;
   update: (data: Categories) => Promise<void>;
   deleteCategorie: (id: number) => Promise<void>;
@@ -26,6 +27,21 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.get("/categorias");
       setCategories(response.data ?? []);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof AxiosError) {
+        console.error("Erro da API: ", e.response?.data.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchCategoriesById(id: number) {
+    try {
+      setIsLoading(true);
+      const response = await api.get(`/categorias/${id}`);
+      setCategories(response.data);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
@@ -107,6 +123,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
       value={{
         isLoading,
         categories,
+        fetchCategoriesById,
         create,
         deleteCategorie,
         update,

@@ -32,7 +32,11 @@ export function Exercises() {
       ) : (
         <>
           {isForm ? (
-            <FormExercises isEditMode={false} initialData={null} />
+            <FormExercises
+              isEditMode={false}
+              initialData={null}
+              onClose={() => setIsForm(false)}
+            />
           ) : (
             <ExerciseList exercises={allExercises} />
           )}
