@@ -48,8 +48,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
 
     toast.success("Deslogado com sucesso!");
-
-    window.location.assign("/");
   }
 
   function loadUser() {
@@ -58,12 +56,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`);
 
     if (token && user) {
-      api.defaults.headers.common["Authorization"] = `${token}`;
+      try {
+        api.defaults.headers.common["Authorization"] = `${token}`;
 
-      setSession({
-        token,
-        usuarioLogin: JSON.parse(user),
-      });
+        setSession({
+          token,
+          usuarioLogin: JSON.parse(user),
+        });
+      } catch (e) {
+        localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
+        localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
+        toast.warn("Login expirado, realize o login novamente!");
+      }
 
       toast.success("Seja Bem-vindo(a) novamente! 💪🏼");
     }

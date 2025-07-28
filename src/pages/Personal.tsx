@@ -32,8 +32,7 @@ export function Personal() {
 
     const totalWorkouts = workouts.length;
     const newWorkoutsThisMonth = workouts.filter(
-      (workout) =>
-        workout && new Date(workout.dataCriacao) >= startOfMonth
+      (workout) => workout && new Date(workout.dataCriacao) >= startOfMonth
     ).length;
     const workoutsGrowthPercentage =
       totalWorkouts > 0
@@ -89,7 +88,6 @@ export function Personal() {
           icon="book-open"
           data={dashboardData.totalExercises}
           subTitle={`Organizados em ${categories.length} categorias`}
-          porcent={0}
         />
       </div>
 

@@ -21,12 +21,15 @@ import { toast } from "react-toastify";
 const formSchema = z.object({
   nomeCompleto: z.string().min(3, { message: "Nome completo é obrigatório." }),
   email: z.string().email({ message: "Por favor, insira um email válido." }),
+  urlImagem: z.string().url({ message: "Por favor, insira uma URL válida." }),
   senha: z
     .string()
     .min(6, { message: "A senha deve ter no mínimo 6 caracteres." }),
-  dataNascimento: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Data de nascimento inválida.",
-  }),
+  dataNascimento: z
+    .string()
+    .refine((date) => date && !isNaN(Date.parse(date)), {
+      message: "Data de nascimento inválida.",
+    }),
   genero: z.enum(["Masculino", "Feminino", "Não-binário", "Outro"]),
   alturaCm: z.coerce
     .number()
@@ -51,6 +54,7 @@ export function FormRegisterStudent({ onClose }: FormRegisterStudentProps) {
     defaultValues: {
       nomeCompleto: "",
       email: "",
+      urlImagem: "",
       senha: "",
       dataNascimento: "",
       genero: "Masculino",
@@ -63,9 +67,6 @@ export function FormRegisterStudent({ onClose }: FormRegisterStudentProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!values.senha) {
-      console.error(
-        "Erro: Senha é obrigatória para o cadastro de um novo usuário."
-      );
       form.setError("senha", { message: "Senha é obrigatória." });
       return;
     }
@@ -75,14 +76,14 @@ export function FormRegisterStudent({ onClose }: FormRegisterStudentProps) {
       "id" | "dataCadastro" | "exercicios" | "imc"
     > = {
       ...values,
-      dataNascimento: new Date(values.dataNascimento),
-      senha: values.senha as string,
-      tipoUsuario: values.tipoUsuario,
+      dataNascimento: values.dataNascimento,
+      senha: values.senha,
+      ativo: true,
+      dataDesativacao: "",
     };
 
-    console.log("Dados do novo aluno para envio:", dataToCreate);
     try {
-      await create(dataToCreate);
+      await create(dataToCreate as User);
       toast.success("Aluno cadastrado com sucesso!");
       form.reset();
       if (onClose) onClose();
@@ -97,7 +98,7 @@ export function FormRegisterStudent({ onClose }: FormRegisterStudentProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 bg-card  p-6 rounded-lg"
+        className="flex flex-col gap-4 bg-card p-6 rounded-lg"
       >
         <div className="grid md:grid-cols-2 gap-4">
           <FormInput
@@ -113,6 +114,13 @@ export function FormRegisterStudent({ onClose }: FormRegisterStudentProps) {
             placeholder="Digite o email do aluno..."
           />
         </div>
+
+        <FormInput
+          control={form.control}
+          name="urlImagem"
+          label="URL da Imagem de Perfil *"
+          placeholder="Cole a URL da imagem do aluno..."
+        />
 
         <div className="grid md:grid-cols-2 gap-4">
           <FormInput

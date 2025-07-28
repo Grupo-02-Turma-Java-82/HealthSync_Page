@@ -1,4 +1,5 @@
 import type { Exercises } from "@/models/Exercises";
+import { PlayIcon } from "lucide-react";
 
 interface ExercisesCardProps {
   treino: Exercises;
@@ -24,28 +25,28 @@ export default function ExercisesCard({ treino }: ExercisesCardProps) {
               <span className="text-foreground">{treino.categoria.nome}</span>
             </span>
             <span>•</span>
-            <span>Nível: {treino.nivel_dificuldade.toLowerCase()}</span>
+            <span>Nível: {treino.nivelDificuldade.toLowerCase()}</span>
           </div>
-          {treino.equipamento_necessario && (
+          {treino.equipamentoNecessario && (
             <p className="text-sm text-muted-foreground mt-1">
               Equipamento necessário:{" "}
               <span className="text-foreground">
-                {treino.equipamento_necessario}
+                {treino.equipamentoNecessario}
               </span>
             </p>
           )}
         </div>
       </header>
 
-      {treino.descricao_detalhada && (
+      {treino.descricaoDetalhada && (
         <p className="text-sm text-muted-foreground">
-          {treino.descricao_detalhada}
+          {treino.descricaoDetalhada}
         </p>
       )}
 
-      {treino.url_video_demonstrativo && (
+      {treino.urlVideoDemonstrativo && (
         <a
-          href={treino.url_video_demonstrativo}
+          href={treino.urlVideoDemonstrativo}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm text-healthsync-orange underline hover:text-orange-600 transition-colors block"
@@ -59,16 +60,7 @@ export default function ExercisesCard({ treino }: ExercisesCardProps) {
           onClick={iniciarTreino}
           className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-2 shadow-xs transition-all"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <polygon points="6 3 20 12 6 21 6 3" />
-          </svg>
+          <PlayIcon size={24} />
           Iniciar Exercício
         </button>
 

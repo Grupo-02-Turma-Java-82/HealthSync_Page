@@ -2,11 +2,11 @@ import { Outlet } from "react-router";
 import { NavbarDashboard } from "./NavbarDashboard";
 import { SidebarProvider } from "./ui/sidebar";
 import { PersonalSidebar } from "./personal-sidebar";
-//import { useUsers } from "@/hooks/useUsers";
 import { UserProvider } from "@/contexts/UserContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export function PersonalLayout() {
-  // const { users } = useUsers();
+  const { session } = useAuth();
 
   return (
     <main className="w-full md:w-auto">
@@ -16,7 +16,9 @@ export function PersonalLayout() {
 
           <main className="w-screen h-full">
             <NavbarDashboard
-              nameUser="Rodrigo Silva"
+              nameUser={
+                session?.usuarioLogin.nomeCompleto || "Usuário Treinador"
+              }
               typeUser="Personal Trainer"
               photo="https://ik.imagekit.io/brunogodoy/testepersonal.jpeg?updatedAt=1752258464257"
             />

@@ -8,7 +8,7 @@ type Props = ComponentProps<"div"> & {
   subTitle: string;
   icon: IconName;
   data: number;
-  porcent: number;
+  porcent?: number;
 };
 
 export function CardDashboard({ title, subTitle, icon, data, porcent }: Props) {
@@ -24,7 +24,9 @@ export function CardDashboard({ title, subTitle, icon, data, porcent }: Props) {
       <div className="flex justify-between">
         <p className="text-xs text-muted-foreground">{subTitle}</p>
 
-        <p className="text-xs text-muted-foreground">+{porcent}%</p>
+        {porcent && (
+          <p className="text-xs text-muted-foreground">+{porcent}%</p>
+        )}
       </div>
     </Card>
   );

@@ -273,8 +273,11 @@ export function FormStudents({
           }
         />
 
-        <div className="flex justify-end mt-4">
-          <Button type="submit" className="cursor-pointer">
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button type="submit">
             {isEditMode ? "Atualizar Aluno" : "Cadastrar Aluno"}
           </Button>
         </div>

@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import type { CreateWorkoutPayload, Workout } from "@/models/Workout";
 import { api } from "@/services/api";
 import { AxiosError } from "axios";
@@ -27,6 +28,7 @@ type linkPayload = {
 export const WorkoutContext = createContext({} as WorkoutContextData);
 
 export function WorkoutProvider({ children }: { children: ReactNode }) {
+  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [isComplete, setIsComplete] = useState(false);
@@ -133,8 +135,10 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    fetchWorkouts();
-  }, []);
+    if (session?.token) {
+      fetchWorkouts();
+    }
+  }, [session?.token]);
 
   return (
     <WorkoutContext.Provider

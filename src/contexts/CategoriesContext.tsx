@@ -94,7 +94,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
   async function deleteCategorie(id: number) {
     try {
       setIsLoading(true);
-      await api.delete(`/catgeorias/${id}`);
+      await api.delete(`/categorias/${id}`);
       toast.success("Categoria excluída com sucesso!");
       setCategories((prevCategories) =>
         prevCategories.filter((cat) => cat.id !== id)

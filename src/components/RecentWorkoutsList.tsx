@@ -58,8 +58,6 @@ export default function RecentWorkoutsList({
                   </p>
                   <div className="flex gap-2 text-sm text-muted-foreground">
                     <span>{formatarData(new Date(exercicio.dataCriacao))}</span>
-                    <span>•</span>
-                    <span>{exercicio.duracao ?? "45 min"}</span>
                   </div>
                 </div>
               </div>

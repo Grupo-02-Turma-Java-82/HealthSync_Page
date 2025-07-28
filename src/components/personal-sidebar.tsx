@@ -5,6 +5,7 @@ import {
   DumbbellIcon,
   SettingsIcon,
   LogOutIcon,
+  LayoutGrid,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -47,6 +48,11 @@ const items = [
     title: "Biblioteca de Exercicios",
     url: "/exercicios",
     icon: BookOpen,
+  },
+  {
+    title: "Biblioteca de Categorias",
+    url: "/categorias",
+    icon: LayoutGrid,
   },
   {
     title: "Montar Treino",

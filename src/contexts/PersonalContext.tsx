@@ -4,6 +4,7 @@ import { api } from "@/services/api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import type { ListStudents } from "@/models/ListStudents";
+import { useAuth } from "@/hooks/useAuth";
 
 type PersonalContext = {
   isLoading: boolean;
@@ -14,6 +15,7 @@ type PersonalContext = {
 export const PersonalContext = createContext({} as PersonalContext);
 
 export function PersonalProvider({ children }: { children: ReactNode }) {
+  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [students, setStudents] = useState<ListStudents[]>([]);
 
@@ -56,9 +58,10 @@ export function PersonalProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    fetchStudents();
-    console.log(students);
-  }, []);
+    if (session?.token) {
+      fetchStudents();
+    }
+  }, [session?.token]);
 
   return (
     <PersonalContext.Provider value={{ isLoading, students, create }}>
