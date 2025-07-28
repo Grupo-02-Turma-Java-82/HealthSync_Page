@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
-import { useUsers } from "@/hooks/useUsers";
+// import { useUsers } from "@/hooks/useUsers";
 import { useAuth } from "@/hooks/useAuth";
 
 const items = [
@@ -45,7 +45,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-  const { users, isLoading } = useUsers();
+  // const { users, isLoading } = useUsers();
   const { remove } = useAuth();
 
   const location = useLocation();
@@ -60,9 +60,9 @@ export function AppSidebar() {
       ? "bg-primary text-primary-foreground font-medium"
       : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors";
 
-  const personalTrainer = users.find(
-    (user) => user.tipoUsuario === "TREINADOR"
-  );
+  // const personalTrainer = users.find(
+  //   (user) => user.tipoUsuario === "TREINADOR"
+  // );
 
   return (
     <Sidebar>
@@ -88,7 +88,7 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupContent className="mt-6 p-4 bg-primary/15 rounded-lg ">
             <h1 className="text-xs text-muted-foreground mb-2">
               Seu Personal Trainer
@@ -119,7 +119,7 @@ export function AppSidebar() {
               </div>
             </div>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
       <SidebarFooter className="border-t-[1px] py-4">
         <AlertDialog>

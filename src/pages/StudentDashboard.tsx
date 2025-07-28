@@ -1,42 +1,42 @@
 import WeeklySummaryCard from "@/components/WeeklySummaryCard";
 import RecentWorkoutsList from "@/components/RecentWorkoutsList";
-import TreinoCard from "@/components/TreinoCard";
 import EmptyState from "@/components/EmptyState";
 import type { WeeklySummary } from "@/models/WeeklySummary";
-import type { User } from "@/models/Users"; // Importar o tipo User
-
+import { useAuth } from "@/hooks/useAuth";
+import { useWorkouts } from "@/hooks/useWorkouts";
+import { useMemo } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useUsers } from "@/hooks/useUsers";
 import { Loader } from "lucide-react";
-import { useExercises } from "@/hooks/useExercises";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 
-export default function UserDashboard() {
-  const { users, isLoading } = useUsers();
-  const { exercises } = useExercises();
-  // CORREÇÃO: Acessar o primeiro usuário ou lidar com o caso de não haver usuários
-  // Se a dashboard é para um usuário logado, você pode querer pegar o usuário do useAuth.
-  // Por enquanto, vou assumir que users[1] é intencional, mas adicionarei uma verificação.
-  const user: User | undefined = users[1]; // Pode ser undefined se o array for menor
+export default function StudentDashboard() {
+  const { session } = useAuth();
+  const { workouts, isLoading: isLoadingWorkouts, setComplete } = useWorkouts();
+  const user = session?.usuarioLogin;
 
-  // CORREÇÃO: Inicializar summaryMock de forma segura para evitar erros se user for undefined
-  const summaryMock: WeeklySummary = {
-    weeklyGoal: exercises.length,
-    // CORREÇÃO: Acessar exercicios de forma segura
-    workoutsCompleted: exercises?.length ?? 0,
+  const studentWorkouts = useMemo(() => {
+    if (!user || !workouts) return [];
+    return workouts.filter((workout) => workout.usuario?.id === user.id);
+  }, [user, workouts]);
+
+  const summary: WeeklySummary = {
+    weeklyGoal: studentWorkouts.length,
+    workoutsCompleted: studentWorkouts.filter((w) => w.concluido).length,
     totalTimeHours: 24,
     currentStreak: 4,
   };
 
   const hoje = format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR });
 
-  // CORREÇÃO: Usar as propriedades corretas (pesoKg, alturaCm) e verificar se user existe
-  const imc =
-    user?.pesoKg && user?.alturaCm
-      ? (user.pesoKg / ((user.alturaCm / 100) * (user.alturaCm / 100))).toFixed(
-          1
-        ) // Altura em cm para metros
-      : null;
+  const imc = 24;
 
   const imcClassificacao = (valor: number) => {
     if (valor < 18.5) return "Abaixo do peso";
@@ -45,33 +45,29 @@ export default function UserDashboard() {
     return "Obesidade";
   };
 
-  // CORREÇÃO: Lidar com o estado de carregamento e a ausência do usuário
-  if (isLoading || !user) {
+  if (isLoadingWorkouts || !user) {
     return (
-      <div className="flex justify-center items-center pt-30">
+      <div className="flex justify-center items-center h-screen">
         <Loader size={32} className="self-center animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <main className="p-8 bg-background min-h-screen space-y-6">
-      {/* Header personalizado */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+    <main className="p-4 sm:p-8 bg-background min-h-screen space-y-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Meu Treino</h1>
           <p className="text-muted-foreground">
-            {/* CORREÇÃO: Usar user.nomeCompleto */}
             Olá, {user.nomeCompleto}! Pronta para mais um treino incrível? 💪
           </p>
         </div>
-        <div className="text-right">
+        <div className="text-left sm:text-right">
           <p className="text-sm text-muted-foreground">Hoje</p>
           <p className="text-lg font-semibold text-foreground">{hoje}</p>
         </div>
       </div>
 
-      {/* Card de IMC */}
       {imc && (
         <div className="bg-card text-card-foreground rounded-xl border border-border shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-1">Seu IMC</h2>
@@ -82,27 +78,73 @@ export default function UserDashboard() {
         </div>
       )}
 
-      {/* Lista de exercícios agrupada em um card de treino */}
-      {/* CORREÇÃO: Acessar exercicios de forma segura */}
-      {exercises?.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <TreinoCard
-          nome="Treino de Peito e Tríceps"
-          nivel="Iniciante"
-          tempoEstimado="45-60 min"
-          caloriasEstimadas="320-450 kcal"
-          // CORREÇÃO: Passar exercicios de forma segura
-          exercicios={exercises || []}
-        />
-      )}
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-4">Treinos</h2>
+        {studentWorkouts.length === 0 ? (
+          <EmptyState message="Você ainda não tem treinos atribuídos." />
+        ) : (
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {studentWorkouts.map((workout) => (
+              <AccordionItem
+                key={workout.id}
+                value={`workout-${workout.id}`}
+                className="border bg-card rounded-xl shadow-sm"
+              >
+                <AccordionTrigger className="p-6 hover:no-underline">
+                  <div className="flex items-center gap-4 w-full">
+                    <Checkbox
+                      id={`workout-check-${workout.id}`}
+                      checked={workout.concluido}
+                      onCheckedChange={() => {
+                        setComplete(workout.id);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <div className="text-left">
+                      <label
+                        htmlFor={`workout-check-${workout.id}`}
+                        className="font-semibold text-lg text-foreground"
+                      >
+                        {workout.nome}
+                      </label>
+                      <p className="text-sm text-muted-foreground">
+                        {workout.treinoExercicios.length} exercícios
+                      </p>
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="p-6 pt-0">
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      {workout.descricao}
+                    </p>
+                    <div className="border-t border-border pt-4">
+                      <h4 className="font-semibold mb-2">Exercícios:</h4>
+                      <ul className="space-y-3">
+                        {workout.treinoExercicios.map((te) => (
+                          <li
+                            key={te.id}
+                            className="flex justify-between items-center text-sm"
+                          >
+                            <span>{te.exercicio.nome}</span>
+                            <Badge variant="outline" className="capitalize">
+                              {te.exercicio.nivelDificuldade.toLowerCase()}
+                            </Badge>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
+      </div>
 
-      {/* Resumo da semana */}
-      <WeeklySummaryCard summary={summaryMock} />
+      <WeeklySummaryCard summary={summary} />
 
-      {/* Lista de treinos recentes */}
-      {/* CORREÇÃO: Passar exercicios de forma segura */}
-      <RecentWorkoutsList exercicios={exercises || []} />
+      <RecentWorkoutsList workouts={studentWorkouts} />
     </main>
   );
 }

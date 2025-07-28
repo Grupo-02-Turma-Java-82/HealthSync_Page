@@ -10,7 +10,6 @@ type WorkoutContextData = {
   isLoading: boolean;
   workouts: Workout[];
   workoutsExercise: WorkoutExercises[];
-  isComplete: boolean;
   create: (data: CreateWorkoutPayload) => Promise<Workout | null>;
   update: (data: Workout) => Promise<void>;
   deleteWorkout: (id: number) => Promise<void>;
@@ -36,7 +35,6 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   const [workoutsExercise, setWorkoutsExercise] = useState<WorkoutExercises[]>(
     []
   );
-  const [isComplete, setIsComplete] = useState(false);
 
   async function fetchWorkouts() {
     try {
@@ -76,17 +74,14 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       const response = await api.post("/treinos", payload);
       setWorkouts((prevWorkout) => [...prevWorkout, response.data]);
       toast.success("Treino cadastrado com sucesso!");
-
       return response.data;
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
-        console.error("Erro da API: ", e.response?.data.message);
         toast.error(
           e.response?.data.message || "Não foi possível cadastrar o treino."
         );
       }
-
       return null;
     } finally {
       setIsLoading(false);
@@ -101,13 +96,11 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true);
       await api.put(`/treinos`, data);
-
       fetchWorkouts();
-      toast.success(`Treinos ${data.nome} atualizado com sucesso`);
+      toast.success(`Treino ${data.nome} atualizado com sucesso`);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
-        console.error("Erro da API: ", e.response?.data.message);
         toast.error(
           e.response?.data.message || "Não foi possível atualizar o treino."
         );
@@ -128,7 +121,6 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
-        console.error("Erro da API: ", e.response?.data.message);
         toast.error(
           e.response?.data.message || "Não foi possível excluir o treino."
         );
@@ -141,11 +133,16 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   async function setComplete(id: number) {
     try {
       await api.patch(`/treinos/${id}/concluido`);
-      setIsComplete(!isComplete);
+      setWorkouts((prevWorkouts) =>
+        prevWorkouts.map((workout) =>
+          workout.id === id
+            ? { ...workout, concluido: !workout.concluido }
+            : workout
+        )
+      );
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
-        console.error("Erro da API: ", e.response?.data.message);
         toast.error(
           e.response?.data.message ||
             "Não foi possível marcar o treino como concluído."
@@ -167,7 +164,6 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
         isLoading,
         workouts,
         workoutsExercise,
-        isComplete,
         create,
         update,
         deleteWorkout,

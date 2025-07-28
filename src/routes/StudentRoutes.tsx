@@ -1,6 +1,5 @@
 import { UserLayout } from "@/components/StudentLayout";
-import { ExercisesProvider } from "@/contexts/ExerciseContext";
-import { UserProvider } from "@/contexts/UserContext";
+import { WorkoutProvider } from "@/contexts/WorkoutContext";
 import UserDashboard from "@/pages/StudentDashboard";
 
 import { Routes, Route } from "react-router";
@@ -12,11 +11,9 @@ export function UserRoutes() {
         <Route
           index
           element={
-            <UserProvider>
-              <ExercisesProvider>
-                <UserDashboard />
-              </ExercisesProvider>
-            </UserProvider>
+            <WorkoutProvider>
+              <UserDashboard />
+            </WorkoutProvider>
           }
         />
       </Route>
