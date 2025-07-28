@@ -1,10 +1,41 @@
 import { useState, type ComponentProps } from "react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { Card } from "./ui/card";
-import { Loader } from "lucide-react";
 import { Button } from "./ui/button";
 import { WorkoutItem } from "./WorkoutItem";
 import type { Workout } from "@/models/Workout";
+import { Skeleton } from "./ui/skeleton";
+
+function CardRecentWorkoutsSkeleton() {
+  return (
+    <Card className="p-6">
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-5 w-3/5" />
+        <Skeleton className="h-4 w-4/5" />
+      </div>
+      <div className="flex flex-col gap-4 mt-4">
+        <div className="flex items-center gap-4">
+          <div className="space-y-2 flex-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="space-y-2 flex-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="space-y-2 flex-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 type Props = ComponentProps<"div"> & {
   title: string;
@@ -23,9 +54,14 @@ export function CardRecentWorkouts({
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  if (isLoading) {
+    return <CardRecentWorkoutsSkeleton />;
+  }
+
+  const safeWorkouts = workouts || [];
   const displayedWorkouts = isExpanded
-    ? workouts || []
-    : (workouts || []).slice(0, 4);
+    ? safeWorkouts
+    : safeWorkouts.slice(0, 4);
 
   return (
     <Card className="p-6">
@@ -37,35 +73,24 @@ export function CardRecentWorkouts({
         <p className="text-muted-foreground text-sm">{subTitle}</p>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-24">
-          <Loader className="animate-spin" />
+      {safeWorkouts.length === 0 ? (
+        <div className="text-center text-muted-foreground py-10">
+          <p>Nenhum treino encontrado.</p>
         </div>
       ) : (
-        <>
-          {(workouts ?? []).length === 0 ? (
-            <div className="text-center text-muted-foreground py-10">
-              <p>Nenhum treino encontrado.</p>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4 mt-4">
-              {displayedWorkouts.map((workout) => (
-                <WorkoutItem key={workout.id} workout={workout} />
-              ))}
-            </div>
-          )}
+        <div className="flex flex-col gap-4 mt-4">
+          {displayedWorkouts.map((workout) => (
+            <WorkoutItem key={workout.id} workout={workout} />
+          ))}
+        </div>
+      )}
 
-          {(workouts ?? []).length > 4 && (
-            <div className="mt-4 flex justify-center w-full">
-              <Button
-                variant="ghost"
-                onClick={() => setIsExpanded(!isExpanded)}
-              >
-                {isExpanded ? "Ver menos" : "Ver todos os treinos"}
-              </Button>
-            </div>
-          )}
-        </>
+      {safeWorkouts.length > 4 && (
+        <div className="mt-4 flex justify-center w-full">
+          <Button variant="ghost" onClick={() => setIsExpanded(!isExpanded)}>
+            {isExpanded ? "Ver menos" : "Ver todos os treinos"}
+          </Button>
+        </div>
       )}
     </Card>
   );

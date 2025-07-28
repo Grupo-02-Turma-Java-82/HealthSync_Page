@@ -1,5 +1,16 @@
+import { useMemo } from "react";
 import type { WeeklySummary } from "@/models/WeeklySummary";
 import { Calendar, CircleCheckBig, Flame, Target, Timer } from "lucide-react";
+
+const motivationalMessages = [
+  "Cada treino é um passo mais perto do seu objetivo. Continue assim! 💪",
+  "A consistência é a chave do sucesso. Não desista! 🚀",
+  "Lembre-se do porquê você começou. Força! 🔥",
+  "Seu corpo pode aguentar quase tudo. É a sua mente que você precisa convencer. ✨",
+  "A dor que você sente hoje será a força que você sentirá amanhã. 🌟",
+  "Não pare quando estiver cansado. Pare quando terminar. 🏆",
+  "O progresso, por menor que seja, ainda é progresso. Celebre cada vitória! 🎉",
+];
 
 interface WeeklySummaryCardProps {
   summary: WeeklySummary;
@@ -10,6 +21,16 @@ export default function WeeklySummaryCard({ summary }: WeeklySummaryCardProps) {
     Math.round((summary.workoutsCompleted / summary.weeklyGoal) * 100),
     100
   );
+
+  const dailyMessage = useMemo(() => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+
+    return motivationalMessages[dayOfYear % motivationalMessages.length];
+  }, []);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -53,8 +74,8 @@ export default function WeeklySummaryCard({ summary }: WeeklySummaryCardProps) {
                 {progresso}% concluído
               </p>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Você está indo muito bem! Continue assim para bater sua meta. 🌟
+            <p className="text-sm text-muted-foreground italic">
+              "{dailyMessage}"
             </p>
           </div>
         </div>
@@ -70,8 +91,7 @@ export default function WeeklySummaryCard({ summary }: WeeklySummaryCardProps) {
         />
         <ResumoMiniCard
           titulo="Sequência Atual"
-          valor={`${summary.currentStreak} dias`
-          }
+          valor={`${summary.currentStreak} dias`}
           descricao="Sua melhor: 12 dias"
           icone={<Flame className="h-6 w-6 text-orange-600" />}
           bgIcon="bg-orange-50 dark:bg-orange-950"
@@ -103,7 +123,13 @@ interface ResumoMiniCardProps {
   bgIcon: string;
 }
 
-function ResumoMiniCard({ titulo, valor, descricao, icone, bgIcon }: ResumoMiniCardProps) {
+function ResumoMiniCard({
+  titulo,
+  valor,
+  descricao,
+  icone,
+  bgIcon,
+}: ResumoMiniCardProps) {
   return (
     <div
       data-slot="card"

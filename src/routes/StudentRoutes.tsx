@@ -1,3 +1,4 @@
+import { NotFound } from "@/components/NotFound";
 import { UserLayout } from "@/components/StudentLayout";
 import { WorkoutProvider } from "@/contexts/WorkoutContext";
 import UserDashboard from "@/pages/StudentDashboard";
@@ -17,6 +18,8 @@ export function UserRoutes() {
           }
         />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

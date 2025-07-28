@@ -1,13 +1,11 @@
-import WeeklySummaryCard from "@/components/WeeklySummaryCard";
-import RecentWorkoutsList from "@/components/RecentWorkoutsList";
-import EmptyState from "@/components/EmptyState";
-import type { WeeklySummary } from "@/models/WeeklySummary";
-import { useAuth } from "@/hooks/useAuth";
-import { useWorkouts } from "@/hooks/useWorkouts";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Loader } from "lucide-react";
+
+import WeeklySummaryCard from "@/components/WeeklySummaryCard";
+import RecentWorkoutsList from "@/components/RecentWorkoutsList";
+import EmptyState from "@/components/EmptyState";
 import {
   Accordion,
   AccordionContent,
@@ -16,11 +14,18 @@ import {
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
+import { useWorkouts } from "@/hooks/useWorkouts";
+import type { WeeklySummary } from "@/models/WeeklySummary";
 
 export default function StudentDashboard() {
   const { session } = useAuth();
   const { workouts, isLoading: isLoadingWorkouts, setComplete } = useWorkouts();
   const user = session?.usuarioLogin;
+
+  const [updatingWorkoutId, setUpdatingWorkoutId] = useState<number | null>(
+    null
+  );
 
   const studentWorkouts = useMemo(() => {
     if (!user || !workouts) return [];
@@ -34,8 +39,6 @@ export default function StudentDashboard() {
     currentStreak: 4,
   };
 
-  const hoje = format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR });
-
   const imc = 24;
 
   const imcClassificacao = (valor: number) => {
@@ -44,6 +47,19 @@ export default function StudentDashboard() {
     if (valor < 30) return "Sobrepeso";
     return "Obesidade";
   };
+
+  const handleSetComplete = async (workoutId: number) => {
+    setUpdatingWorkoutId(workoutId);
+    try {
+      await setComplete(workoutId);
+    } catch (error) {
+      console.error("Falha ao atualizar o estado do treino", error);
+    } finally {
+      setUpdatingWorkoutId(null);
+    }
+  };
+
+  const hoje = format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR });
 
   if (isLoadingWorkouts || !user) {
     return (
@@ -88,22 +104,29 @@ export default function StudentDashboard() {
               <AccordionItem
                 key={workout.id}
                 value={`workout-${workout.id}`}
-                className="border bg-card rounded-xl shadow-sm"
+                className="border bg-card rounded-xl shadow-sm overflow-hidden"
               >
-                <AccordionTrigger className="p-6 hover:no-underline">
-                  <div className="flex items-center gap-4 w-full">
+                <div className="flex items-center p-6">
+                  {updatingWorkoutId === workout.id ? (
+                    <div className="w-6 h-6 flex items-center justify-center mr-4">
+                      <Loader size={18} className="animate-spin text-primary" />
+                    </div>
+                  ) : (
                     <Checkbox
                       id={`workout-check-${workout.id}`}
                       checked={workout.concluido}
                       onCheckedChange={() => {
-                        setComplete(workout.id);
+                        handleSetComplete(workout.id);
                       }}
                       onClick={(e) => e.stopPropagation()}
+                      className="mr-4"
                     />
+                  )}
+                  <AccordionTrigger className="flex-1 p-0 hover:no-underline">
                     <div className="text-left">
                       <label
                         htmlFor={`workout-check-${workout.id}`}
-                        className="font-semibold text-lg text-foreground"
+                        className="font-semibold text-lg text-foreground cursor-pointer"
                       >
                         {workout.nome}
                       </label>
@@ -111,8 +134,8 @@ export default function StudentDashboard() {
                         {workout.treinoExercicios.length} exercícios
                       </p>
                     </div>
-                  </div>
-                </AccordionTrigger>
+                  </AccordionTrigger>
+                </div>
                 <AccordionContent className="p-6 pt-0">
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">

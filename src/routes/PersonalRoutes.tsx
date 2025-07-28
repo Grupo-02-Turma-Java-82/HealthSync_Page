@@ -11,6 +11,7 @@ import { CategoriesProvider } from "@/contexts/CategoriesContext";
 import { NewWorkout } from "@/pages/NewWorkout";
 import { Categories } from "@/pages/Categories";
 import { NewCategorie } from "@/components/NewCategorie";
+import { NotFound } from "@/components/NotFound";
 
 export function PersonalRoutes() {
   return (
@@ -115,6 +116,8 @@ export function PersonalRoutes() {
           }
         />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

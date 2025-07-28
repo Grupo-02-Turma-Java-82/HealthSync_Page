@@ -88,8 +88,6 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
 
     if (onSubmitSuccess) {
       onSubmitSuccess();
-    } else {
-      navigate("/treinos");
     }
   }
 

@@ -1,9 +1,36 @@
+import type { SyntheticEvent } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./ui/datatable";
 import { format, differenceInYears } from "date-fns";
 import type { ListStudents } from "@/models/ListStudents";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+
+const PLACEHOLDER_IMG =
+  "https://ik.imagekit.io/brunogodoy/placeholder.jpg?updatedAt=1751288384316";
 
 export const columns: ColumnDef<ListStudents>[] = [
+  {
+    id: "foto",
+    header: "Foto",
+    cell: ({ row }) => {
+      const fotoUrl = row.original.aluno.urlImagem;
+
+      const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.src = PLACEHOLDER_IMG;
+      };
+
+      return (
+        <Avatar className="h-10 w-10">
+          <AvatarImage
+            src={fotoUrl}
+            alt={`Foto de ${row.original.aluno.nomeCompleto}`}
+            className="rounded-full object-cover"
+            onError={handleImageError}
+          />
+        </Avatar>
+      );
+    },
+  },
   {
     accessorFn: (row) => row.aluno.nomeCompleto,
     id: "nomeCompleto",
@@ -17,7 +44,7 @@ export const columns: ColumnDef<ListStudents>[] = [
       if (!dataNascimento) {
         return <span>-</span>;
       }
-      const idade = differenceInYears(new Date(), dataNascimento);
+      const idade = differenceInYears(new Date(), new Date(dataNascimento));
       return <div>{idade}</div>;
     },
   },
@@ -37,7 +64,8 @@ export const columns: ColumnDef<ListStudents>[] = [
     header: "Peso (Kg)",
   },
   {
-    accessorKey: "imc",
+    accessorFn: (row) => row.aluno.imc,
+    id: "imc",
     header: "IMC",
     cell: ({ row }) => {
       const imc = row.original.aluno.imc;
@@ -59,7 +87,10 @@ export const columns: ColumnDef<ListStudents>[] = [
       if (!dataCadastro) {
         return <span>-</span>;
       }
-      const dataFormatada = format(dataCadastro, "dd/MM/yyyy 'às' HH:mm");
+      const dataFormatada = format(
+        new Date(dataCadastro),
+        "dd/MM/yyyy 'às' HH:mm"
+      );
       return <div>{dataFormatada}</div>;
     },
   },

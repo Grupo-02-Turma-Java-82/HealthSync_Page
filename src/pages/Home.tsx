@@ -10,6 +10,21 @@ export function Home() {
       <Features />
       <Plans />
       <Feedbacks />
+
+      {/* <div className="absolute flex flex-col gap-3 bottom-4 right-4">
+        <Button
+          className="bg-blue-600 hover:bg-blue-600/80"
+          onClick={() => save(dataToLoginPersonal)}
+        >
+          Demo Treinador
+        </Button>
+        <Button
+          className="bg-green-600 hover:bg-green-600/80"
+          onClick={() => save(dataToLoginStudent)}
+        >
+          Demo Aluno
+        </Button>
+      </div> */}
     </div>
   );
 }

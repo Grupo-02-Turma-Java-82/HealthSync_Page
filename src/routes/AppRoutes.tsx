@@ -1,4 +1,5 @@
 import { AppLayout } from "@/components/AppLayout";
+import { NotFound } from "@/components/NotFound";
 import { Home } from "@/pages/Home";
 import { Login } from "@/pages/Login";
 import { Register } from "@/pages/Register";
@@ -12,6 +13,8 @@ export function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

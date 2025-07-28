@@ -12,9 +12,9 @@ import { useWorkouts } from "@/hooks/useWorkouts";
 import { useCategories } from "@/hooks/useCategories";
 
 export function Personal() {
-  const { students } = usePersonal();
-  const { workouts, isLoading } = useWorkouts();
-  const { exercises } = useExercises();
+  const { students, isLoading: isLoadingStudents } = usePersonal();
+  const { workouts, isLoading: isLoadingWorkouts } = useWorkouts();
+  const { exercises, isLoading: isLoadingExercises } = useExercises();
   const { categories } = useCategories();
 
   const navigate = useNavigate();
@@ -75,6 +75,7 @@ export function Personal() {
           data={dashboardData.totalUsers}
           subTitle={`${dashboardData.newUsersThisMonth} novos este mês`}
           porcent={dashboardData.usersGrowthPercentage}
+          isLoading={isLoadingStudents}
         />
         <CardDashboard
           title="Treinos Criados"
@@ -82,12 +83,14 @@ export function Personal() {
           data={dashboardData.totalWorkouts}
           subTitle={`${dashboardData.newWorkoutsThisMonth} novos este mês`}
           porcent={dashboardData.workoutsGrowthPercentage}
+          isLoading={isLoadingWorkouts}
         />
         <CardDashboard
           title="Exercícios na Biblioteca"
           icon="book-open"
           data={dashboardData.totalExercises}
           subTitle={`Organizados em ${categories.length} categorias`}
+          isLoading={isLoadingExercises}
         />
       </div>
 
@@ -97,7 +100,7 @@ export function Personal() {
           title="Atividade dos Alunos"
           subTitle="Últimas atividades dos seus alunos"
           students={students}
-          isLoading={isLoading}
+          isLoading={isLoadingStudents}
         />
 
         <CardRecentWorkouts
@@ -105,7 +108,7 @@ export function Personal() {
           title="Treinos Recentes"
           subTitle="Últimos treinos criados"
           workouts={workouts}
-          isLoading={isLoading}
+          isLoading={isLoadingWorkouts}
         />
       </div>
     </div>
