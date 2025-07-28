@@ -1,5 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import type { CreateWorkoutPayload, Workout } from "@/models/Workout";
+import type { WorkoutExercises } from "@/models/WorkoutExercise";
 import { api } from "@/services/api";
 import { AxiosError } from "axios";
 import { createContext, useEffect, useState, type ReactNode } from "react";
@@ -8,6 +9,7 @@ import { toast } from "react-toastify";
 type WorkoutContextData = {
   isLoading: boolean;
   workouts: Workout[];
+  workoutsExercise: WorkoutExercises[];
   isComplete: boolean;
   create: (data: CreateWorkoutPayload) => Promise<Workout | null>;
   update: (data: Workout) => Promise<void>;
@@ -31,6 +33,9 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [workoutsExercise, setWorkoutsExercise] = useState<WorkoutExercises[]>(
+    []
+  );
   const [isComplete, setIsComplete] = useState(false);
 
   async function fetchWorkouts() {
@@ -38,6 +43,21 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.get("/treinos");
       setWorkouts(response.data ?? []);
+    } catch (e) {
+      console.error(e);
+      if (e instanceof AxiosError) {
+        console.error("Erro da API: ", e.response?.data.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchWorkoutsExercise() {
+    try {
+      setIsLoading(true);
+      const response = await api.get("/treinoexercicios");
+      setWorkoutsExercise(response.data ?? []);
     } catch (e) {
       console.error(e);
       if (e instanceof AxiosError) {
@@ -137,6 +157,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (session?.token) {
       fetchWorkouts();
+      fetchWorkoutsExercise();
     }
   }, [session?.token]);
 
@@ -145,6 +166,7 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
       value={{
         isLoading,
         workouts,
+        workoutsExercise,
         isComplete,
         create,
         update,

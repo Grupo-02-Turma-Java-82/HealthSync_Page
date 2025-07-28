@@ -9,8 +9,6 @@ export function Exercises() {
   const { exercises, isLoading } = useExercises();
   const [isForm, setIsForm] = useState(false);
 
-  const allExercises = exercises?.flatMap((exercise) => exercise) || [];
-
   return (
     <div className="flex flex-col p-6">
       <div className="flex justify-between items-center mb-6">
@@ -38,7 +36,7 @@ export function Exercises() {
               onClose={() => setIsForm(false)}
             />
           ) : (
-            <ExerciseList exercises={allExercises} />
+            <ExerciseList exercises={exercises} />
           )}
         </>
       )}

@@ -25,7 +25,7 @@ import type { CreateExercisePayload, Exercises } from "@/models/Exercises";
 import { useExercises } from "@/hooks/useExercises";
 import { useCategories } from "@/hooks/useCategories";
 import { Loader } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
@@ -82,7 +82,7 @@ export function FormExercises({
   });
 
   useEffect(() => {
-    if (isEditMode && initialData && categories.length > 0) {
+    if (isEditMode && initialData?.categoria && categories.length > 0) {
       form.reset({
         nome: initialData.nome,
         categoriaId: initialData.categoria.id,
@@ -95,34 +95,42 @@ export function FormExercises({
   }, [isEditMode, initialData, categories, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (isEditMode) {
-      if (!initialData?.id) {
-        toast.error("ID do exercício não encontrado para atualização.");
-        return;
+    try {
+      if (isEditMode) {
+        if (!initialData?.id) {
+          toast.error("ID do exercício não encontrado para atualização.");
+          return;
+        }
+        const dataToUpdate = {
+          ...initialData,
+          ...values,
+          categoria: {
+            id: values.categoriaId,
+          },
+        };
+        await update(dataToUpdate as Exercises);
+      } else {
+        const dataToCreate = {
+          ...values,
+          categoria: {
+            id: values.categoriaId,
+          },
+        };
+        await create(dataToCreate as CreateExercisePayload);
       }
-      const dataToUpdate = {
-        ...initialData,
-        id: initialData.id,
-        ...values,
-        categoria: {
-          id: values.categoriaId,
-        },
-      };
-      await update(dataToUpdate as Exercises);
-    } else {
-      const dataToCreate = {
-        ...values,
-        categoria: {
-          id: values.categoriaId,
-        },
-      };
-      await create(dataToCreate as CreateExercisePayload);
-      if (onClose) onClose();
-    }
-    if (onSubmitSuccess) {
-      onSubmitSuccess();
-    } else {
-      navigate("/exercicios");
+
+      if (onClose) {
+        onClose();
+      }
+
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      } else {
+        navigate("/exercicios");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar exercício:", error);
+      toast.error("Não foi possível salvar o exercício.");
     }
   }
 
@@ -154,8 +162,8 @@ export function FormExercises({
             <FormItem>
               <FormLabel>Categoria *</FormLabel>
               <Select
-                onValueChange={(value) => field.onChange(parseInt(value))}
-                value={field.value?.toString()}
+                onValueChange={(value) => field.onChange(parseInt(value, 10))}
+                value={field.value ? String(field.value) : ""}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -164,10 +172,7 @@ export function FormExercises({
                 </FormControl>
                 <SelectContent>
                   {categories?.map((categoria) => (
-                    <SelectItem
-                      key={categoria.id}
-                      value={categoria.id.toString()}
-                    >
+                    <SelectItem key={categoria.id} value={String(categoria.id)}>
                       {categoria.nome}
                     </SelectItem>
                   ))}
@@ -248,19 +253,35 @@ export function FormExercises({
           placeholder="Ex: Halteres, Barra, Máquina"
         />
 
-        <Button disabled={isLoading} type="submit" className="w-full">
-          {isLoading ? (
-            <Loader size={26} className="animate-spin" />
-          ) : isEditMode ? (
-            "Atualizar Exercício"
-          ) : (
-            "Cadastrar Exercício"
-          )}
-        </Button>
-
-        <Button variant="outline" className="w-full" onClick={onClose}>
-          Cancelar
-        </Button>
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-4 mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full sm:w-auto"
+            onClick={() => {
+              if (isEditMode) {
+                navigate("/exercicios");
+              } else if (onClose) {
+                onClose();
+              }
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button
+            disabled={isLoading}
+            type="submit"
+            className="w-full sm:w-auto"
+          >
+            {isLoading ? (
+              <Loader size={20} className="animate-spin" />
+            ) : isEditMode ? (
+              "Atualizar Exercício"
+            ) : (
+              "Cadastrar Exercício"
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

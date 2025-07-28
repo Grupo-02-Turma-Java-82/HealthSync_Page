@@ -32,15 +32,25 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { EmptyTable } from "../EmptyTable";
-import { Edit, SearchIcon } from "lucide-react";
+import { Edit, SearchIcon, Eye } from "lucide-react";
 
 import { FormStudents } from "../FormStudents";
 import type { ListStudents } from "@/models/ListStudents";
+import type { Workout } from "@/models/Workout";
+import { useWorkouts } from "@/hooks/useWorkouts";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -53,7 +63,37 @@ export function DataTable<
 >({ columns, data }: DataTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<TData | null>(null);
+
+  const [studentWorkouts, setStudentWorkouts] = useState<Workout[]>([]);
+  const { workoutsExercise } = useWorkouts();
+
+  const handleOpenDetails = (studentData: TData) => {
+    if (!studentData?.aluno) return;
+
+    setSelectedStudent(studentData);
+    setDetailsDialogOpen(true);
+
+    const allWorkoutLinks = workoutsExercise;
+    const studentId = studentData.aluno.id;
+
+    const workoutsMap = new Map<number, Workout>();
+
+    allWorkoutLinks
+      .filter((link) => link.treino.usuario?.id === studentId)
+      .forEach((link) => {
+        if (!workoutsMap.has(link.treino.id)) {
+          workoutsMap.set(link.treino.id, {
+            ...link.treino,
+            treinoExercicios: [],
+          });
+        }
+        workoutsMap.get(link.treino.id)?.treinoExercicios?.push(link);
+      });
+
+    setStudentWorkouts(Array.from(workoutsMap.values()));
+  };
 
   const table = useReactTable({
     data,
@@ -145,6 +185,14 @@ export function DataTable<
 
                     <DropdownMenuItem
                       className="flex items-center cursor-pointer transition-colors"
+                      onClick={() => handleOpenDetails(row.original)}
+                    >
+                      <Eye size={16} className="mr-2" />
+                      <span className="text-foreground">Ver detalhes</span>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      className="flex items-center cursor-pointer transition-colors"
                       onClick={() => {
                         setSelectedStudent(row.original);
                         setEditDialogOpen(true);
@@ -209,6 +257,80 @@ export function DataTable<
             initialData={selectedStudent}
             onClose={() => setEditDialogOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Detalhes do Aluno</DialogTitle>
+          </DialogHeader>
+          {selectedStudent?.aluno && (
+            <div className="space-y-6 py-4">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-20 w-20">
+                  <AvatarImage
+                    src={selectedStudent.aluno.urlImagem}
+                    alt={selectedStudent.aluno.nomeCompleto}
+                  />
+                  <AvatarFallback>
+                    {selectedStudent.aluno.nomeCompleto.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    {selectedStudent.aluno.nomeCompleto}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {selectedStudent.aluno.email}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-2 border-b pb-2">
+                  Treinos Atribuídos
+                </h3>
+                {studentWorkouts.length > 0 ? (
+                  <Accordion type="single" collapsible className="w-full">
+                    {studentWorkouts.map((treino) => (
+                      <AccordionItem
+                        key={treino.id}
+                        value={`treino-${treino.id}`}
+                      >
+                        <AccordionTrigger>{treino.nome}</AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-4">
+                            <p className="text-sm text-muted-foreground">
+                              {treino.descricao}
+                            </p>
+                            <h4 className="font-semibold">Exercícios:</h4>
+                            <ul className="space-y-2">
+                              {treino.treinoExercicios?.map((te) => (
+                                <li
+                                  key={te.id}
+                                  className="flex justify-between items-center text-sm"
+                                >
+                                  <span>{te.exercicio.nome}</span>
+                                  <Badge variant="outline">
+                                    {te.exercicio.nivelDificuldade}
+                                  </Badge>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                ) : (
+                  <p className="text-sm text-muted-foreground mt-4">
+                    Nenhum treino atribuído a este aluno.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

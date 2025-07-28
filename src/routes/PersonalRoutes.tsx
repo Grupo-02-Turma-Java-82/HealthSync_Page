@@ -37,7 +37,9 @@ export function PersonalRoutes() {
           index
           element={
             <PersonalProvider>
-              <Students />
+              <WorkoutProvider>
+                <Students />
+              </WorkoutProvider>
             </PersonalProvider>
           }
         />
