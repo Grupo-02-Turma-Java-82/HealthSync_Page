@@ -1,32 +1,37 @@
-import type { SyntheticEvent } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./ui/datatable";
 import { format, differenceInYears } from "date-fns";
 import type { ListStudents } from "@/models/ListStudents";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
-const PLACEHOLDER_IMG =
-  "https://ik.imagekit.io/brunogodoy/placeholder.jpg?updatedAt=1751288384316";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+
+const getInitials = (name: string) => {
+  if (!name) return "";
+  const nameParts = name.trim().split(" ");
+  const firstName = nameParts[0] ?? "";
+  const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+};
 
 export const columns: ColumnDef<ListStudents>[] = [
   {
     id: "foto",
     header: "Foto",
     cell: ({ row }) => {
-      const fotoUrl = row.original.aluno.urlImagem;
-
-      const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.src = PLACEHOLDER_IMG;
-      };
+      const aluno = row.original.aluno;
+      const fotoUrl = aluno.urlImagem;
+      const nomeCompleto = aluno.nomeCompleto;
 
       return (
         <Avatar className="h-10 w-10">
           <AvatarImage
             src={fotoUrl}
-            alt={`Foto de ${row.original.aluno.nomeCompleto}`}
+            alt={`Foto de ${nomeCompleto}`}
             className="rounded-full object-cover"
-            onError={handleImageError}
           />
+          <AvatarFallback className="text-xs font-medium">
+            {getInitials(nomeCompleto)}
+          </AvatarFallback>
         </Avatar>
       );
     },

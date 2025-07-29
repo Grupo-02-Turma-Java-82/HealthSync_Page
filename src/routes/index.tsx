@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router";
 import { AppRoutes } from "./AppRoutes";
 import { useAuth } from "@/hooks/useAuth";
 import { PersonalRoutes } from "./PersonalRoutes";
@@ -23,9 +22,5 @@ export function Routes() {
     return <Loading />;
   }
 
-  return (
-    <BrowserRouter>
-      <Route />
-    </BrowserRouter>
-  );
+  return <Route />;
 }

@@ -36,6 +36,9 @@ const formSchema = z.object({
     .min(5, { message: "O nome deve ter no mínimo 5 caracteres." })
     .max(100, { message: "O nome deve ter no máximo 100 caracteres." }),
   descricao: z.string().optional(),
+  tempoMinutos: z.coerce
+    .number()
+    .positive({ message: "A duração deve ser um número positivo." }),
   usuarioId: z.coerce
     .number({
       invalid_type_error: "Por favor, selecione um aluno.",
@@ -64,6 +67,7 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
     defaultValues: {
       nome: "",
       descricao: "",
+      tempoMinutos: 0,
       usuarioId: undefined,
       exerciseIds: [],
     },
@@ -71,7 +75,6 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
 
   const exercisesByCategory = useMemo(() => {
     if (!exercises || !categories) return {};
-
     return categories.reduce((acc, category) => {
       const exercisesInCategory = exercises.filter(
         (exercise) => exercise.categoria?.id === category.id
@@ -84,18 +87,11 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
   }, [exercises, categories]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await handleCreate(values);
-
-    if (onSubmitSuccess) {
-      onSubmitSuccess();
-    }
-  }
-
-  async function handleCreate(values: z.infer<typeof formSchema>) {
     try {
       const workoutPayload = {
         nome: values.nome,
         descricao: values.descricao,
+        tempoMinutos: values.tempoMinutos,
         usuario: {
           id: values.usuarioId,
         },
@@ -116,8 +112,11 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
       });
 
       await Promise.allSettled(linkPromises);
-
       toast.success("Treino e exercícios vinculados com sucesso!");
+
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (error) {
       console.error("Erro ao criar treino:", error);
       toast.error("Ocorreu um erro ao criar o treino. Tente novamente.");
@@ -133,12 +132,21 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-6 p-6 bg-card rounded-lg shadow-sm"
       >
-        <FormInput
-          control={form.control}
-          name="nome"
-          label="Nome do Treino *"
-          placeholder="Ex: Treino A - Peito e Tríceps"
-        />
+        <div className="grid md:grid-cols-2 gap-6">
+          <FormInput
+            control={form.control}
+            name="nome"
+            label="Nome do Treino *"
+            placeholder="Ex: Treino A - Peito e Tríceps"
+          />
+          <FormInput
+            control={form.control}
+            name="tempoMinutos"
+            label="Duração (minutos) *"
+            type="number"
+            placeholder="Ex: 60"
+          />
+        </div>
 
         <TextareaInput
           control={form.control}

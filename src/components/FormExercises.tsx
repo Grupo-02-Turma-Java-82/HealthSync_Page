@@ -192,7 +192,7 @@ export function FormExercises({
               <FormControl>
                 <Textarea
                   placeholder="Descreva o exercício em detalhes..."
-                  className="resize-y min-h-[100px]"
+                  className="resize-none min-h-[100px]"
                   {...field}
                 />
               </FormControl>

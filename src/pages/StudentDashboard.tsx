@@ -59,7 +59,7 @@ export default function StudentDashboard() {
     }
   };
 
-  const hoje = format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR });
+  const today = format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR });
 
   if (isLoadingWorkouts || !user) {
     return (
@@ -80,7 +80,7 @@ export default function StudentDashboard() {
         </div>
         <div className="text-left sm:text-right">
           <p className="text-sm text-muted-foreground">Hoje</p>
-          <p className="text-lg font-semibold text-foreground">{hoje}</p>
+          <p className="text-lg font-semibold text-foreground">{today}</p>
         </div>
       </div>
 

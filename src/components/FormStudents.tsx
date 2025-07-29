@@ -156,7 +156,6 @@ export function FormStudents({
 
       try {
         await create(dataToCreate as User);
-        toast.success("Aluno cadastrado com sucesso!");
         form.reset();
         if (onClose) onClose();
       } catch (error) {

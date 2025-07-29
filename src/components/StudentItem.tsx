@@ -2,15 +2,20 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "./ui/badge";
 import type { ListStudents } from "@/models/ListStudents";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import type { SyntheticEvent } from "react";
+
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 type Props = {
   student: ListStudents;
 };
 
-const PLACEHOLDER_IMG =
-  "https://ik.imagekit.io/brunogodoy/placeholder.jpg?updatedAt=1751288384316";
+const getInitials = (name: string) => {
+  if (!name) return "";
+  const nameParts = name.trim().split(" ");
+  const firstName = nameParts[0] ?? "";
+  const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+};
 
 export function StudentItem({ student }: Props) {
   const createdAt = new Date(student.dataVinculo);
@@ -22,10 +27,6 @@ export function StudentItem({ student }: Props) {
 
   const status = student.aluno.ativo ? "default" : "secondary";
 
-  const handleImageError = (e: SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = PLACEHOLDER_IMG;
-  };
-
   return (
     <div className="flex justify-between items-center">
       <div className="flex gap-4 items-center">
@@ -34,8 +35,10 @@ export function StudentItem({ student }: Props) {
             src={student.aluno.urlImagem}
             alt={`Foto de ${student.aluno.nomeCompleto}`}
             className="rounded-full object-cover"
-            onError={handleImageError}
           />
+          <AvatarFallback className="font-medium">
+            {getInitials(student.aluno.nomeCompleto)}
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <h1 className="text-md font-bold text-foreground">

@@ -4,6 +4,7 @@ import type { UserAPIResponse } from "@/models/Users";
 
 import { api } from "@/services/api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 type AuthContext = {
   isLoading: boolean;
@@ -21,8 +22,9 @@ export const AuthContext = createContext({} as AuthContext);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<null | UserAPIResponse>(null);
-
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   function save(data: UserAPIResponse) {
     const { token, ...user } = data;
@@ -48,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
 
     toast.success("Deslogado com sucesso!");
+    navigate("/");
   }
 
   function loadUser() {
@@ -63,9 +66,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           token,
           usuarioLogin: JSON.parse(user),
         });
-      } catch (e) {
+      } catch (e: any) {
         localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
         localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
+
+        if (e.toString().includes("401")) {
+          remove();
+        }
         toast.warn("Login expirado, realize o login novamente!");
       }
 

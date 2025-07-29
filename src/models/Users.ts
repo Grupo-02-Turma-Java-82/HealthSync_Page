@@ -22,6 +22,8 @@ export type UserLogin = {
   email: string;
   senha: string;
   tipoUsuario: "ALUNO" | "TREINADOR" | "ADMINISTRADOR";
+  urlImagem: string;
+  img: number;
 };
 
 export type UserAPIResponse = {

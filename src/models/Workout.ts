@@ -7,6 +7,7 @@ export type Workout = {
   concluido: boolean;
   dataUltimaConclusao: string;
   dataCriacao: string;
+  tempoMinutos: number;
   usuario: {
     id: number;
     nome?: string;

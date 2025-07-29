@@ -118,11 +118,13 @@ export function DataTable<
 
   if (tableIsInitiallyEmpty) {
     return (
-      <EmptyTable
-        icon="user-2"
-        iconSize={44}
-        title="Não há alunos cadastrados"
-      />
+      <div className="py-16">
+        <EmptyTable
+          icon="user-2"
+          iconSize={44}
+          title="Não há alunos cadastrados"
+        />
+      </div>
     );
   }
 

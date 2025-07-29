@@ -20,7 +20,7 @@ export function PersonalLayout() {
                 session?.usuarioLogin.nomeCompleto || "Usuário Treinador"
               }
               typeUser="Personal Trainer"
-              photo="https://ik.imagekit.io/brunogodoy/testepersonal.jpeg?updatedAt=1752258464257"
+              photo={session?.usuarioLogin.urlImagem || ""}
             />
             <Outlet />
           </main>

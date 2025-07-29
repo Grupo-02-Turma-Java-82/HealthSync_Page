@@ -4,6 +4,8 @@ import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import type { ComponentProps } from "react";
 
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+
 type Props = ComponentProps<"nav"> & {
   nameUser: string;
   typeUser: string;
@@ -12,6 +14,14 @@ type Props = ComponentProps<"nav"> & {
 
 export function NavbarDashboard({ nameUser, typeUser, photo }: Props) {
   const { setTheme, theme } = useTheme();
+
+  const getInitials = (name: string) => {
+    const nameParts = name.trim().split(" ");
+    const firstName = nameParts[0] ?? "";
+    const lastName =
+      nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  };
 
   return (
     <nav className="bg-background/95 backdrop-blur border-b border-border h-16 flex items-center justify-between px-6">
@@ -28,7 +38,7 @@ export function NavbarDashboard({ nameUser, typeUser, photo }: Props) {
           <span className="sr-only">Mudar tema</span>
         </Button>
 
-        <Button variant="ghost">
+        <Button variant="ghost" size="icon">
           <Bell />
         </Button>
 
@@ -37,11 +47,16 @@ export function NavbarDashboard({ nameUser, typeUser, photo }: Props) {
           <p className="text-xs text-muted-foreground">{typeUser}</p>
         </div>
 
-        <img
-          src={photo}
-          className="w-8 h-8 rounded-full object-cover"
-          alt={`Foto do usuário ${nameUser}`}
-        />
+        <Avatar>
+          <AvatarImage
+            src={photo}
+            alt={`Foto do usuário ${nameUser}`}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+          <AvatarFallback className="w-8 h-8 text-sm">
+            {getInitials(nameUser)}
+          </AvatarFallback>
+        </Avatar>
       </div>
     </nav>
   );
