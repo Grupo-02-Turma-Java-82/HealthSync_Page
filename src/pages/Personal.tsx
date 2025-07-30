@@ -62,7 +62,7 @@ export function Personal() {
           </p>
         </div>
 
-        <Button onClick={() => navigate("/novo-exercicio")}>
+        <Button onClick={() => navigate("/exercicios")}>
           <PlusIcon size={24} className="mr-2" />
           Novo Exercício
         </Button>
