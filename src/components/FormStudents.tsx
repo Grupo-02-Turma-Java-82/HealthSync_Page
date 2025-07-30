@@ -131,6 +131,7 @@ export function FormStudents({
       };
 
       try {
+        console.log(dataToUpdate);
         await update(dataToUpdate as User);
         toast.success("Aluno atualizado com sucesso!");
         if (onClose) onClose();

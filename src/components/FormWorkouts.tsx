@@ -210,7 +210,7 @@ export function FormWorkouts({ onSubmitSuccess }: FormWorkoutsProps) {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => navigate("/exercicios/novo")}
+                  onClick={() => navigate("/exercicios")}
                 >
                   <PlusIcon className="mr-2 h-4 w-4" />
                   Criar Exercício

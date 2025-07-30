@@ -9,8 +9,8 @@ export function Register() {
       <h1 className="text-3xl font-heading font-bold text-foreground mb-2">
         Crie sua conta
       </h1>
-      <p className="text-muted-foreground mb-8">
-        Preencha os dados para criar sua conta HealthSync
+      <p className="text-muted-foreground mb-8 w-full">
+        Preencha os dados para criar sua conta de Treinador
       </p>
       <Card className="rounded-lg bg-card text-card-foreground shadow-sm card-gradient shadow-card border-0 p-6 w-full max-w-md">
         <h1 className="tracking-tight text-xl font-heading font-semibold">

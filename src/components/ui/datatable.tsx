@@ -45,7 +45,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { EmptyTable } from "../EmptyTable";
-import { Edit, SearchIcon, Eye } from "lucide-react";
+import { SearchIcon, Eye } from "lucide-react";
 
 import { FormStudents } from "../FormStudents";
 import type { ListStudents } from "@/models/ListStudents";
@@ -193,7 +193,7 @@ export function DataTable<
                       <span className="text-foreground">Ver detalhes</span>
                     </DropdownMenuItem>
 
-                    <DropdownMenuItem
+                    {/* <DropdownMenuItem
                       className="flex items-center cursor-pointer transition-colors"
                       onClick={() => {
                         setSelectedStudent(row.original);
@@ -202,7 +202,7 @@ export function DataTable<
                     >
                       <Edit size={16} className="mr-2" />
                       <span className="text-foreground">Editar</span>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                   </DropdownMenuContent>
                 </AlertDialog>
               </DropdownMenu>
@@ -247,7 +247,7 @@ export function DataTable<
       </div>
 
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-[725px]">
+        <DialogContent className="w-[90vw] max-h-[90vh] overflow-y-auto rounded-lg sm:max-w-[725px]">
           <DialogHeader>
             <DialogTitle>Editar Aluno</DialogTitle>
             <DialogDescription>

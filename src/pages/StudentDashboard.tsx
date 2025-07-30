@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Loader } from "lucide-react";
+import { HelpCircle, Loader } from "lucide-react";
 
 import WeeklySummaryCard from "@/components/WeeklySummaryCard";
 import RecentWorkoutsList from "@/components/RecentWorkoutsList";
@@ -17,6 +17,13 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import type { WeeklySummary } from "@/models/WeeklySummary";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { WorkoutSkeleton } from "@/components/WokoutSkeleton";
 
 export default function StudentDashboard() {
   const { session } = useAuth();
@@ -86,7 +93,23 @@ export default function StudentDashboard() {
 
       {imc && (
         <div className="bg-card text-card-foreground rounded-xl border border-border shadow-sm p-6">
-          <h2 className="text-lg font-semibold mb-1">Seu IMC</h2>
+          <span className="flex gap-2">
+            <h2 className="text-lg font-semibold mb-1">Seu IMC</h2>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-xs text-lg">
+                    O Índice de Massa Corporal (IMC) é uma medida que avalia se
+                    o peso de uma pessoa está adequado à sua altura.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </span>
+
           <p className="text-2xl font-bold text-primary">{imc}</p>
           <p className="text-sm text-muted-foreground">
             Classificação: {imcClassificacao(Number(imc))}
@@ -96,72 +119,81 @@ export default function StudentDashboard() {
 
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-4">Treinos</h2>
-        {studentWorkouts.length === 0 ? (
-          <EmptyState message="Você ainda não tem treinos atribuídos." />
+        {isLoadingWorkouts ? (
+          <WorkoutSkeleton />
         ) : (
-          <Accordion type="single" collapsible className="w-full space-y-4">
-            {studentWorkouts.map((workout) => (
-              <AccordionItem
-                key={workout.id}
-                value={`workout-${workout.id}`}
-                className="border bg-card rounded-xl shadow-sm overflow-hidden"
-              >
-                <div className="flex items-center p-6">
-                  {updatingWorkoutId === workout.id ? (
-                    <div className="w-6 h-6 flex items-center justify-center mr-4">
-                      <Loader size={18} className="animate-spin text-primary" />
-                    </div>
-                  ) : (
-                    <Checkbox
-                      id={`workout-check-${workout.id}`}
-                      checked={workout.concluido}
-                      onCheckedChange={() => {
-                        handleSetComplete(workout.id);
-                      }}
-                      onClick={(e) => e.stopPropagation()}
-                      className="mr-4"
-                    />
-                  )}
-                  <AccordionTrigger className="flex-1 p-0 hover:no-underline">
-                    <div className="text-left">
-                      <label
-                        htmlFor={`workout-check-${workout.id}`}
-                        className="font-semibold text-lg text-foreground cursor-pointer"
-                      >
-                        {workout.nome}
-                      </label>
-                      <p className="text-sm text-muted-foreground">
-                        {workout.treinoExercicios.length} exercícios
-                      </p>
-                    </div>
-                  </AccordionTrigger>
-                </div>
-                <AccordionContent className="p-6 pt-0">
-                  <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      {workout.descricao}
-                    </p>
-                    <div className="border-t border-border pt-4">
-                      <h4 className="font-semibold mb-2">Exercícios:</h4>
-                      <ul className="space-y-3">
-                        {workout.treinoExercicios.map((te) => (
-                          <li
-                            key={te.id}
-                            className="flex justify-between items-center text-sm"
+          <>
+            {studentWorkouts.length === 0 ? (
+              <EmptyState message="Você ainda não tem treinos atribuídos." />
+            ) : (
+              <Accordion type="single" collapsible className="w-full space-y-4">
+                {studentWorkouts.map((workout) => (
+                  <AccordionItem
+                    key={workout.id}
+                    value={`workout-${workout.id}`}
+                    className="border bg-card rounded-xl shadow-sm overflow-hidden"
+                  >
+                    <div className="flex items-center p-6">
+                      {updatingWorkoutId === workout.id ? (
+                        <div className="w-6 h-6 flex items-center justify-center mr-4">
+                          <Loader
+                            size={18}
+                            className="animate-spin text-primary"
+                          />
+                        </div>
+                      ) : (
+                        <Checkbox
+                          id={`workout-check-${workout.id}`}
+                          checked={workout.concluido}
+                          onCheckedChange={() => {
+                            handleSetComplete(workout.id);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="mr-4"
+                        />
+                      )}
+                      <AccordionTrigger className="flex-1 p-0 hover:no-underline">
+                        <div className="text-left">
+                          <label
+                            htmlFor={`workout-check-${workout.id}`}
+                            className="font-semibold text-lg text-foreground cursor-pointer"
                           >
-                            <span>{te.exercicio.nome}</span>
-                            <Badge variant="outline" className="capitalize">
-                              {te.exercicio.nivelDificuldade.toLowerCase()}
-                            </Badge>
-                          </li>
-                        ))}
-                      </ul>
+                            {workout.nome}
+                          </label>
+                          <p className="text-sm text-muted-foreground">
+                            {workout.treinoExercicios.length} exercícios
+                          </p>
+                        </div>
+                      </AccordionTrigger>
                     </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                    <AccordionContent className="p-6 pt-0">
+                      <div className="space-y-4">
+                        <p className="text-sm text-muted-foreground">
+                          {workout.descricao}
+                        </p>
+                        <div className="border-t border-border pt-4">
+                          <h4 className="font-semibold mb-2">Exercícios:</h4>
+                          <ul className="space-y-3">
+                            {workout.treinoExercicios.map((te) => (
+                              <li
+                                key={te.id}
+                                className="flex justify-between items-center text-sm"
+                              >
+                                <span>{te.exercicio.nome}</span>
+                                <Badge variant="outline" className="capitalize">
+                                  {te.exercicio.nivelDificuldade.toLowerCase()}
+                                </Badge>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            )}
+          </>
         )}
       </div>
 

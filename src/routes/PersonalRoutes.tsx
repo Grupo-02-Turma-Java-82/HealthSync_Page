@@ -12,6 +12,7 @@ import { NewWorkout } from "@/pages/NewWorkout";
 import { Categories } from "@/pages/Categories";
 import { NewCategorie } from "@/components/NewCategorie";
 import { NotFound } from "@/components/NotFound";
+import { UserProvider } from "@/contexts/UserContext";
 
 export function PersonalRoutes() {
   return (
@@ -39,7 +40,9 @@ export function PersonalRoutes() {
           element={
             <PersonalProvider>
               <WorkoutProvider>
-                <Students />
+                <UserProvider>
+                  <Students />
+                </UserProvider>
               </WorkoutProvider>
             </PersonalProvider>
           }

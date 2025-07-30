@@ -41,7 +41,7 @@ export function Footer() {
               <li>
                 <a
                   className="text-timberwolf hover:text-primary transition-fast"
-                  href="#"
+                  href="https://linktr.ee/coreunitygen"
                 >
                   Sobre a equipe
                 </a>

@@ -100,7 +100,7 @@ export default function WeeklySummaryCard({ summary }: WeeklySummaryCardProps) {
           titulo="Tempo Total"
           valor={`${summary.totalTimeHours}h`}
           descricao="Este mês"
-          icone={<Timer className="h-6 w-6 text-blue-600" />}
+          icone={<Timer className="h-6 w-6 text-blue-400" />}
           bgIcon="bg-blue-50 dark:bg-blue-950"
         />
         <ResumoMiniCard
