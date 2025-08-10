@@ -15,12 +15,11 @@ O HealthSync é uma plataforma completa para personal trainers e seus alunos, pr
 
 ## 📋 Índice
 
-- [Sobre o Projeto](#-sobre-o-projeto)
+- [📖 Sobre o Projeto](#-sobre-o-projeto)
 - [✨ Funcionalidades](#-funcionalidades)
 - [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
 - [🏁 Como Executar o Projeto](#-como-executar-o-projeto)
-- [🖼️ Telas da Aplicação](#-telas-da-aplicação)
-- [📝 Licença](#-licença)
+- [👥 Integrantes](#integrantes)
 
 ## 📖 Sobre o Projeto
 
@@ -42,7 +41,7 @@ O projeto oferece um conjunto de funcionalidades poderosas, tanto para os treina
 - **Interface Intuitiva:** Navegue facilmente pela plataforma com um design moderno e uma experiência de usuário otimizada.
 - **Dashboard Pessoal:** Veja um resumo semanal, seu IMC e os treinos recentes em um painel de controle completo.
 
-## 🚀 Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 
@@ -55,17 +54,24 @@ Este projeto foi desenvolvido utilizando as seguintes tecnologias:
 - **Zod:** Para validação de esquemas e tipos.
 - **Lucide React:** Biblioteca de ícones.
 
+## ⚙️ Arquitetura e API
+
+A aplicação front-end consome uma API RESTful desenvolvida em Java com Spring Boot, responsável por toda a lógica de negócio e persistência dos dados. A comunicação é feita através de requisições HTTP, seguindo os padrões de mercado.
+
+Para mais detalhes sobre a API, acesse o repositório:
+[Repositório da API HealthSync](https://github.com/Grupo-02-Turma-Java-82/HealthSync_API)
+
 ## 🏁 Como Executar o Projeto
 
 Para executar o projeto localmente, siga os passos abaixo:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/grupo-02-turma-java-82.git](https://github.com/seu-usuario/grupo-02-turma-java-82.git)
+    git clone https://github.com/Grupo-02-Turma-Java-82/HealthSync_Page
     ```
 2.  **Acesse o diretório do projeto:**
     ```bash
-    cd grupo-02-turma-java-82/healthsync_page/HealthSync_Page-main
+    cd HealthSync_Page
     ```
 3.  **Instale as dependências:**
     ```bash
@@ -79,6 +85,17 @@ Para executar o projeto localmente, siga os passos abaixo:
 A aplicação estará disponível em `http://localhost:5173`.
 
 
-## 📝 Licença
+## 👥 Integrantes
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto foi desenvolvido por:
+
+| Nome                | GitHub                                           | Função                 |
+|---------------------|--------------------------------------------------|------------------------|
+| Bruno Godoy         | [Brunogodoy2911](https://github.com/Brunogodoy2911) | Dev/Master         |
+| Felipe Peronica     | [feperonica](https://github.com/feperonica)     |  Dev      |
+| Jovani de Souza     | [JovaniOUnico](https://github.com/JovaniOUnico) | Dev            |
+| Lívia D’Alexandri   | [liviadalexandri](https://github.com/liviadalexandri) | Dev               |
+| Luiza Gonçalves     | [luizaeg](https://github.com/luizaeg)           | Dev                 |
+| Maria Helena        | [squarcinihelena](https://github.com/squarcinihelena) | Dev/Tester               |
+| Rafaela Giometti    | [rafagiometti](https://github.com/rafagiometti) | Dev                    |
+
